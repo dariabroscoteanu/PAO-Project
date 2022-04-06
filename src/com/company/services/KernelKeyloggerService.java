@@ -1,6 +1,6 @@
-package Services;
+package services;
 
-import Entities.KernelKeylogger;
+import entities.KernelKeylogger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

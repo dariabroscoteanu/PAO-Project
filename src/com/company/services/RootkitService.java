@@ -1,6 +1,6 @@
-package Services;
+package services;
 
-import Entities.Rootkit;
+import entities.Rootkit;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

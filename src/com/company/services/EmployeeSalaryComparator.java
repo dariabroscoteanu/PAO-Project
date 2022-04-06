@@ -1,4 +1,4 @@
-package Entities;
+package com.company.entities;
 
 import java.util.Comparator;
 

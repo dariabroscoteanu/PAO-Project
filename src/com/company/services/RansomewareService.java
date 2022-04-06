@@ -1,6 +1,6 @@
-package Services;
+package services;
 
-import Entities.Ransomeware;
+import entities.Ransomeware;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

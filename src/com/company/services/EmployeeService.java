@@ -1,8 +1,8 @@
-package Services;
+package services;
 
-import Entities.Address;
-import Entities.Employee;
-import Entities.EmployeeSalaryComparator;
+import entities.Address;
+import entities.Employee;
+import entities.EmployeeSalaryComparator;
 
 import java.util.*;
 

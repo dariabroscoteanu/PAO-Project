@@ -1,10 +1,10 @@
-package Services;
+package services;
 
 
 
-import Entities.Computer;
-import Entities.Company;
-import Entities.Address;
+import entities.Computer;
+import entities.Company;
+import entities.Address;
 
 import java.text.ParseException;
 import java.util.ArrayList;

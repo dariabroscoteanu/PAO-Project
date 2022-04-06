@@ -1,7 +1,6 @@
-package Entities;
+package entities;
 
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 public class Computer {
     private int id;

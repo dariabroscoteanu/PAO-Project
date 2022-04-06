@@ -1,13 +1,13 @@
-package Services;
+package services;
 
-import Entities.Company;
-import Entities.Computer;
-import Entities.KernelKeylogger;
-import Entities.Keylogger;
-import Entities.Ransomeware;
-import Entities.Rootkit;
-import Entities.Costumer;
-import Entities.Employee;
+import entities.Company;
+import entities.Computer;
+import entities.KernelKeylogger;
+import entities.Keylogger;
+import entities.Ransomeware;
+import entities.Rootkit;
+import entities.Costumer;
+import entities.Employee;
 
 import java.text.ParseException;
 import java.util.*;

@@ -1,4 +1,4 @@
-package Entities;
+package com.company.entities;
 
 public class Costumer extends User {
     private String usage;

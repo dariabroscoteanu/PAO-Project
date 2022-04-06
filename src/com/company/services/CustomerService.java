@@ -1,16 +1,16 @@
-package Services;
+package com.company.services;
 
 
 
-import Entities.Address;
-import Entities.Costumer;
+import com.company.entities.Address;
+import com.company.entities.Customer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CostumerService {
-    private List<Costumer> costumers = new ArrayList<>();
+    private List<Customer> costumers = new ArrayList<>();
     private static CostumerService instance;
 
     private CostumerService(){}
@@ -22,14 +22,14 @@ public class CostumerService {
         return instance;
     }
 
-    public List<Costumer> getCostumers() {
-        List<Costumer> costumersCopy = new ArrayList<>();
+    public List<Customer> getCostumers() {
+        List<Customer> costumersCopy = new ArrayList<>();
         costumersCopy.addAll(this.costumers);
         return costumersCopy;
     }
 
-    public Costumer getCostumerById(int index){
-        Costumer costumer = new Costumer();
+    public Customer getCostumerById(int index){
+        Customer costumer = new Customer();
         for(int i = 0; i < this.costumers.size(); ++i){
             if(this.costumers.get(i).getId() == index){
                 costumer = this.costumers.get(i);
@@ -38,7 +38,7 @@ public class CostumerService {
         return costumer;
     }
 
-    public void updateCostumer(int index, Costumer costumer){
+    public void updateCostumer(int index, Customer costumer){
         for(int i = 0; i < this.costumers.size(); ++i){
             if(this.costumers.get(i).getId() == index){
                 this.costumers.remove(i);
@@ -48,7 +48,7 @@ public class CostumerService {
         }
     }
 
-    public void addCostumer(Costumer costumer){
+    public void addCostumer(Customer costumer){
         this.costumers.add(costumer);
     }
 
@@ -61,7 +61,7 @@ public class CostumerService {
         }
     }
 
-    public void deteleCostumer(Costumer costumer){
+    public void deteleCostumer(Customer costumer){
         for(int i = 0;i < this.costumers.size(); ++i){
             if(this.costumers.get(i).equals(costumer)){
                 this.costumers.remove(i);
@@ -70,10 +70,10 @@ public class CostumerService {
         }
     }
 
-    public Costumer readCostumer(){
+    public Customer readCostumer(){
         Scanner scanner = new Scanner(System.in);
         AddressService addressService = AddressService.getInstance();
-        Costumer costumer = new Costumer();
+        Customer costumer = new Customer();
         System.out.println("Id");
         try {
             costumer.setId(scanner.nextInt());

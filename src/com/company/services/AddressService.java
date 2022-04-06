@@ -1,11 +1,10 @@
-package Services;
+package services;
 
-import Entities.Address;
+import entities.Address;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 
 public class AddressService {
     private List<Address> addresses = new ArrayList<>();

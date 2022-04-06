@@ -1,6 +1,4 @@
-package Entities;
-
-import Entities.Address;
+package entities;
 
 public abstract class User {
     protected int id;

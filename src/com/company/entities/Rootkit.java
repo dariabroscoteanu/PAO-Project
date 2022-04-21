@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 import java.util.*;
 
@@ -10,6 +10,19 @@ public class Rootkit extends Malware {
     private Set<String> imports;
     private Set<String> configFiles;
 
+    public Rootkit(){}
+
+    public Rootkit(int id, double rating, Date creationDate, String name, String infectionMethod, ArrayList<String> modifiedRegisters, Set<String> imports, Set<String> configFiles) {
+        super(id, rating, creationDate, name, infectionMethod, modifiedRegisters);
+        this.imports = imports;
+        this.configFiles = configFiles;
+    }
+
+    public Rootkit(Rootkit toCopy){
+        super(toCopy);
+        this.imports = toCopy.imports;
+        this.configFiles = toCopy.configFiles;
+    }
 
     public Set<String> getImports() {
         return imports;
@@ -25,20 +38,6 @@ public class Rootkit extends Malware {
 
     public void setConfigFiles(Set<String> configFiles) {
         this.configFiles = configFiles;
-    }
-
-    public Rootkit(){}
-
-    public Rootkit(int id, double rating, Date creationDate, String name, String infectionMethod, ArrayList<String> modifiedRegisters, Set<String> imports, Set<String> configFiles) {
-        super(id, rating, creationDate, name, infectionMethod, modifiedRegisters);
-        this.imports = imports;
-        this.configFiles = configFiles;
-    }
-
-    public Rootkit(Rootkit toCopy){
-        super(toCopy);
-        this.imports = toCopy.imports;
-        this.configFiles = toCopy.configFiles;
     }
 
     @Override

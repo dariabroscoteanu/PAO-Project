@@ -1,17 +1,17 @@
-package services;
+package com.company.services;
 
 
 
-import entities.Computer;
-import entities.Company;
-import entities.Address;
+import com.company.entities.Computer;
+import com.company.entities.Company;
+import com.company.entities.Address;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CompanyService {
+public class CompanyService implements CompanyInterface{
     private List<Company> companies = new ArrayList<>();
     private static CompanyService instance;
 
@@ -44,7 +44,7 @@ public class CompanyService {
         for(int i = 0; i < this.companies.size(); ++i){
             if(this.companies.get(i).getId() == index){
                 this.companies.remove(i);
-                this.companies.add(index, company);
+                this.companies.add(i, company);
                 break;
             }
         }
@@ -94,7 +94,7 @@ public class CompanyService {
         Address address = new Address();
         address = addressService.readAddress();
         company.setAddress(address);
-
+        //scanner.next();
         System.out.println("Number of Computers");
         int nr ;
         try {

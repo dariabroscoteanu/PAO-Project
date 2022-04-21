@@ -1,6 +1,6 @@
-package services;
+package com.company.services;
 
-import entities.Ransomeware;
+import com.company.entities.Ransomeware;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class RansomewareService {
+public class RansomewareService implements RansomewareInterface{
     private List<Ransomeware> ransomewares = new ArrayList<>();
     private static RansomewareService instance;
 
@@ -42,7 +42,7 @@ public class RansomewareService {
         for(int i = 0; i < this.ransomewares.size(); ++i){
             if(this.ransomewares.get(i).getId() == index){
                 this.ransomewares.remove(i);
-                this.ransomewares.add(index, ransomeware);
+                this.ransomewares.add(i, ransomeware);
                 break;
             }
         }

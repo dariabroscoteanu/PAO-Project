@@ -9,99 +9,99 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CostumerService {
-    private List<Customer> costumers = new ArrayList<>();
-    private static CostumerService instance;
+public class CustomerService implements CustomerInterface{
+    private List<Customer> customers = new ArrayList<>();
+    private static CustomerService instance;
 
-    private CostumerService(){}
+    private CustomerService(){}
 
-    public static CostumerService getInstance(){
+    public static CustomerService getInstance(){
         if(instance == null){
-            instance = new CostumerService();
+            instance = new CustomerService();
         }
         return instance;
     }
 
-    public List<Customer> getCostumers() {
-        List<Customer> costumersCopy = new ArrayList<>();
-        costumersCopy.addAll(this.costumers);
-        return costumersCopy;
+    public List<Customer> getCustomers() {
+        List<Customer> customersCopy = new ArrayList<>();
+        customersCopy.addAll(this.customers);
+        return customersCopy;
     }
 
-    public Customer getCostumerById(int index){
-        Customer costumer = new Customer();
-        for(int i = 0; i < this.costumers.size(); ++i){
-            if(this.costumers.get(i).getId() == index){
-                costumer = this.costumers.get(i);
+    public Customer getCustomerById(int index){
+        Customer customer = new Customer();
+        for(int i = 0; i < this.customers.size(); ++i){
+            if(this.customers.get(i).getId() == index){
+                customer = this.customers.get(i);
             }
         }
-        return costumer;
+        return customer;
     }
 
-    public void updateCostumer(int index, Customer costumer){
-        for(int i = 0; i < this.costumers.size(); ++i){
-            if(this.costumers.get(i).getId() == index){
-                this.costumers.remove(i);
-                this.costumers.add(index, costumer);
+    public void updateCustomer(int index, Customer customer){
+        for(int i = 0; i < this.customers.size(); ++i){
+            if(this.customers.get(i).getId() == index){
+                this.customers.remove(i);
+                this.customers.add(i, customer);
                 break;
             }
         }
     }
 
-    public void addCostumer(Customer costumer){
-        this.costumers.add(costumer);
+    public void addCustomer(Customer customer){
+        this.customers.add(customer);
     }
 
-    public void deleteCostumerById(int index){
-        for(int i = 0; i < this.costumers.size(); ++i){
-            if(this.costumers.get(i).getId() == index){
-                this.costumers.remove(i);
+    public void deleteCustomerById(int index){
+        for(int i = 0; i < this.customers.size(); ++i){
+            if(this.customers.get(i).getId() == index){
+                this.customers.remove(i);
                 break;
             }
         }
     }
 
-    public void deteleCostumer(Customer costumer){
-        for(int i = 0;i < this.costumers.size(); ++i){
-            if(this.costumers.get(i).equals(costumer)){
-                this.costumers.remove(i);
+    public void deteleCustomer(Customer customer){
+        for(int i = 0;i < this.customers.size(); ++i){
+            if(this.customers.get(i).equals(customer)){
+                this.customers.remove(i);
                 break;
             }
         }
     }
 
-    public Customer readCostumer(){
+    public Customer readCustomer(){
         Scanner scanner = new Scanner(System.in);
         AddressService addressService = AddressService.getInstance();
-        Customer costumer = new Customer();
+        Customer customer = new Customer();
         System.out.println("Id");
         try {
-            costumer.setId(scanner.nextInt());
+            customer.setId(scanner.nextInt());
         } catch (Exception e){
             System.out.println("Provide int");
-            costumer.setId(scanner.nextInt());
+            customer.setId(scanner.nextInt());
         }
 
         System.out.println("Name");
-        costumer.setName(scanner.next());
+        customer.setName(scanner.next());
 
         System.out.println("Email");
-        costumer.setEmail(scanner.next());
+        customer.setEmail(scanner.next());
 
         System.out.println("Address");
         Address address = addressService.readAddress();
-        costumer.setAddress(address);
+        customer.setAddress(address);
 
         System.out.println("Usage");
-        costumer.setUsage(scanner.next());
+        customer.setUsage(scanner.next());
 
         System.out.println("Taxes");
         try {
-            costumer.setTaxes(scanner.nextDouble());
+            customer.setTaxes(scanner.nextDouble());
         } catch (Exception e){
             System.out.println("Provide double");
-            costumer.setTaxes(scanner.nextDouble());
+            customer.setTaxes(scanner.nextDouble());
         }
-        return costumer;
+        return customer;
     }
 }

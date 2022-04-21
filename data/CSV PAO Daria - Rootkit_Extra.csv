@@ -1,0 +1,8 @@
+Id,Modified Register,Import,Config Files
+1,HKLM-run,System Service Descriptor Table,ntoskrnl.exe
+1,HKCU-run,SSDT,chec.exe
+2,HKLM-run,NtCreateFile,nimic.exe
+2,HKCU-run,SSDT,chec.exe
+3,run,SSDT,ntoskrnl.exe
+4,run,NtCreateFile,ntoskrnl.exe
+5,run,NtCreateFile,ntoskrnl.exe

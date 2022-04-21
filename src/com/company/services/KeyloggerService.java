@@ -1,12 +1,12 @@
-package services;
+package com.company.services;
 
-import entities.Keylogger;
+import com.company.entities.Keylogger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class KeyloggerService {
+public class KeyloggerService implements KeyloggerInterface{
     private List<Keylogger> keyloggers = new ArrayList<>();
     private static KeyloggerService instance;
 
@@ -39,7 +39,7 @@ public class KeyloggerService {
         for(int i = 0; i < this.keyloggers.size(); ++i){
             if(this.keyloggers.get(i).getId() == index){
                 this.keyloggers.remove(i);
-                this.keyloggers.add(index, keylogger);
+                this.keyloggers.add(i, keylogger);
                 break;
             }
         }
@@ -77,7 +77,7 @@ public class KeyloggerService {
         }
         if(keylogger.getUsedFunctions().size() > 0) {
             for (String element : keylogger.getUsedFunctions()) {
-                if (element.equals("CreateFileW") || element.equals("OpenProcess") || element.equals("ReadFile") || element.equals("WriteFile") || element.equals("RegisterHotKey") || element.equals("SetWindowsHookEx"))
+                if (element.equals("CreateFileW") || element.equals("OpenProcess") || element.equals("OpenProcess") || element.equals("WriteFile") || element.equals("RegisterHotKey") || element.equals("SetWindowsHookEx"))
                     rating += 30;
             }
         }

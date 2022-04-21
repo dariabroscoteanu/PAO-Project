@@ -1,20 +1,20 @@
-package services;
+package com.company.services;
 
 
-import entities.Computer;
-import entities.KernelKeylogger;
-import entities.Keylogger;
-import entities.Ransomeware;
-import entities.Rootkit;
-import entities.Costumer;
-import entities.Employee;
+import com.company.entities.Computer;
+import com.company.entities.KernelKeylogger;
+import com.company.entities.Keylogger;
+import com.company.entities.Ransomeware;
+import com.company.entities.Rootkit;
+import com.company.entities.Customer;
+import com.company.entities.Employee;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ComputerService {
+public class ComputerService implements ComputerInterface {
     private List<Computer> computers = new ArrayList<>();
     private static ComputerService instance;
 
@@ -47,7 +47,7 @@ public class ComputerService {
         for(int i = 0; i < this.computers.size(); ++i){
             if(this.computers.get(i).getId() == index){
                 this.computers.remove(i);
-                this.computers.add(index, computer);
+                this.computers.add(i, computer);
                 break;
             }
         }
@@ -57,7 +57,7 @@ public class ComputerService {
         this.computers.add(computer);
     }
 
-    public void deleteCostumerById(int index){
+    public void deleteComputerById(int index){
         for(int i = 0; i < this.computers.size(); ++i){
             if(this.computers.get(i).getId() == index){
                 this.computers.remove(i);
@@ -103,7 +103,7 @@ public class ComputerService {
         KeyloggerService keyloggerService = KeyloggerService.getInstance();
         KernelKeyloggerService kernelKeyloggerService = KernelKeyloggerService.getInstance();
         EmployeeService employeeService = EmployeeService.getInstance();
-        CostumerService costumerService = CostumerService.getInstance();
+        CustomerService customerService = CustomerService.getInstance();
         System.out.println("Id");
         Computer computer = new Computer();
         computer.setId(scanner.nextInt());
@@ -170,7 +170,7 @@ public class ComputerService {
                 opt = scanner.nextInt();
             }
             if(opt == 0){
-                Costumer costumer = costumerService.readCostumer();
+                Customer costumer = customerService.readCustomer();
                 arr1.add(costumer);
             } else if (opt == 1) {
                 Employee employee = employeeService.readEmployee();

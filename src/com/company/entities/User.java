@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 public abstract class User {
     protected int id;

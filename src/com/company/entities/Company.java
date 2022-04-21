@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 import java.util.List;
 

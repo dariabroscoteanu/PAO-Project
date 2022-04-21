@@ -1,6 +1,6 @@
-package services;
+package com.company.services;
 
-import entities.Rootkit;
+import com.company.entities.Rootkit;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +39,7 @@ public class RootkitService {
         for(int i = 0; i < this.rootkits.size(); ++i){
             if(this.rootkits.get(i).getId() == index){
                 this.rootkits.remove(i);
-                this.rootkits.add(index, rootkit);
+                this.rootkits.add(i, rootkit);
                 break;
             }
         }

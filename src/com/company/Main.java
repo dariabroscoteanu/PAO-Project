@@ -1,6 +1,6 @@
 package com.company;
 
-import Services.Service;
+import com.company.services.Service;
 
 import java.text.ParseException;
 

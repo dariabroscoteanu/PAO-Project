@@ -1,12 +1,12 @@
 package com.company.entities;
 
-public class Costumer extends User {
+public class Customer extends User {
     private String usage;
     private double taxes;
 
-    public Costumer(){}
+    public Customer(){}
 
-    public Costumer(int id, Address address, String name, String email, String usage, double taxes) {
+    public Customer(int id, Address address, String name, String email, String usage, double taxes) {
         super(id, address, name, email);
         this.usage = usage;
         this.taxes = taxes;
@@ -30,7 +30,7 @@ public class Costumer extends User {
 
     @Override
     public String toString() {
-        return "Employees's name: " + this.name + '\n' + "Email: " + this.email + '\n' + "Address: " +
+        return "Customer's name: " + this.name + '\n' + "Email: " + this.email + '\n' + "Address: " +
                     this.address.toString() + '\n' + "Usage: " + this.usage + '\n' +  "Taxes: " + this.taxes;
     }
 }

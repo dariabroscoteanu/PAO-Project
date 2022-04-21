@@ -1,12 +1,12 @@
-package services;
+package com.company.services;
 
-import entities.Address;
+import com.company.entities.Address;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class AddressService {
+public class AddressService implements AddressInterface {
     private List<Address> addresses = new ArrayList<>();
     private static AddressService instance;
 
@@ -39,7 +39,7 @@ public class AddressService {
         for(int i = 0; i < this.addresses.size(); ++i){
             if(this.addresses.get(i).getId() == index){
                 this.addresses.remove(i);
-                this.addresses.add(index, address);
+                this.addresses.add(i, address);
                 break;
             }
         }

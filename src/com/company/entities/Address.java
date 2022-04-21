@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 public class Address {
     private int id;
@@ -6,6 +6,15 @@ public class Address {
     private String city;
     private String country;
     private String addressLine;
+
+    public Address() {}
+
+    public Address(String street, String city, String country, String addressLine) {
+        this.street = street;
+        this.city = city;
+        this.country = country;
+        this.addressLine = addressLine;
+    }
 
     public int getId() {
         return id;
@@ -44,15 +53,6 @@ public class Address {
     }
 
     public void setAddressLine(String addressLine) {
-        this.addressLine = addressLine;
-    }
-
-    public Address() {}
-
-    public Address(String street, String city, String country, String addressLine) {
-        this.street = street;
-        this.city = city;
-        this.country = country;
         this.addressLine = addressLine;
     }
 

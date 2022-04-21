@@ -1,12 +1,11 @@
-package services;
+package com.company.services;
 
-import entities.Address;
-import entities.Employee;
-import entities.EmployeeSalaryComparator;
+import com.company.entities.Address;
+import com.company.entities.Employee;
 
 import java.util.*;
 
-public class EmployeeService {
+public class EmployeeService implements EmployeeInterface{
     private List<Employee> employees = new ArrayList<>();
     private static EmployeeService instance;
 
@@ -40,7 +39,7 @@ public class EmployeeService {
         for(int i = 0; i < this.employees.size(); ++i){
             if(this.employees.get(i).getId() == index){
                 this.employees.remove(i);
-                this.employees.add(index, employee);
+                this.employees.add(i, employee);
                 break;
             }
         }

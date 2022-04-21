@@ -1,6 +1,6 @@
-package services;
+package com.company.services;
 
-import entities.KernelKeylogger;
+import com.company.entities.KernelKeylogger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class KernelKeyloggerService {
+public class KernelKeyloggerService implements KernelKeyloggerInterface {
     private List<KernelKeylogger> kernelKeyloggers = new ArrayList<>();
     private static KernelKeyloggerService instance;
 
@@ -42,7 +42,7 @@ public class KernelKeyloggerService {
         for(int i = 0; i < this.kernelKeyloggers.size(); ++i){
             if(this.kernelKeyloggers.get(i).getId() == index){
                 this.kernelKeyloggers.remove(i);
-                this.kernelKeyloggers.add(index, kernelKeylogger);
+                this.kernelKeyloggers.add(i, kernelKeylogger);
                 break;
             }
         }
@@ -173,7 +173,6 @@ public class KernelKeyloggerService {
             arr2.add(str);
         }
         kernelKeylogger.setUsedKeys(arr2);
-
         System.out.println("Is hiding files?");
         try {
             kernelKeylogger.setHidingFiles(scanner.nextBoolean());

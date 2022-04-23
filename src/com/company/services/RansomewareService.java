@@ -1,19 +1,21 @@
 package com.company.services;
 
+import com.company.entities.Address;
+import com.company.entities.Employee;
 import com.company.entities.Ransomeware;
 
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class RansomewareService implements RansomewareInterface{
+public class RansomewareService implements RansomewareInterface, CSVReaderWriter<Ransomeware>{
     private List<Ransomeware> ransomewares = new ArrayList<>();
     private static RansomewareService instance;
 
-    private RansomewareService(){}
+    private RansomewareService(){
+        read();
+    }
 
     public static RansomewareService getInstance(){
         if(instance == null){
@@ -83,6 +85,12 @@ public class RansomewareService implements RansomewareInterface{
         return rating;
     }
 
+    @Override
+    public String getFileName() {
+        String path = "resources/CSV PAO Daria - Ransomeware.csv";
+        return path;
+    }
+
     public Ransomeware readRansomeware() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         Ransomeware ransomeware = new Ransomeware();
@@ -96,21 +104,21 @@ public class RansomewareService implements RansomewareInterface{
 
 
         System.out.println("Name");
-        ransomeware.setName(scanner.next());
+        ransomeware.setName(scanner.nextLine());
 
         System.out.println("Creation Date");
         String date;
         try {
-            date = scanner.next();
+            date = scanner.nextLine();
         } catch (Exception e){
             System.out.println("Provide date in format - dd/mm/yyyy");
-            date = scanner.next();
+            date = scanner.nextLine();
         }
         Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
         ransomeware.setCreationDate(date1);
 
         System.out.println("Infection Method");
-        ransomeware.setInfectionMethod(scanner.next());
+        ransomeware.setInfectionMethod(scanner.nextLine());
 
         System.out.println("Number of modified registers");
         int nr;
@@ -123,7 +131,7 @@ public class RansomewareService implements RansomewareInterface{
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
-            String str = scanner.next();
+            String str = scanner.nextLine();
             arr.add(str);
         }
         ransomeware.setModifiedRegisters(arr);
@@ -149,4 +157,203 @@ public class RansomewareService implements RansomewareInterface{
 
         return ransomeware;
     }
+
+    @Override
+    public void initList(List<Ransomeware> objects) {
+        ransomewares = new ArrayList<Ransomeware>(objects);
+    }
+
+    @Override
+    public String convertObjectToString(Ransomeware object) {
+        Date date = object.getCreationDate();
+        String dateString = new SimpleDateFormat("dd/MM/yyyy").format(date);
+        String line = object.getId() + separator + object.getName() + separator + dateString + separator + object.getInfectionMethod() + separator + object.getEncryptionRating() + separator + object.getHidingRating()+  "\n";
+        return line;
+    }
+
+    public List<Ransomeware> read() {
+        String fileName = this.getFileName();
+        File file = new File(fileName);
+        String extraFileName = "resources/CSV PAO Daria - Ransomeware _Extra.csv";
+        File extraFile = new File(extraFileName);
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            List<Ransomeware> result;
+
+            try {
+                List<Ransomeware> resultLines = new ArrayList<Ransomeware>();
+                bufferedReader.readLine(); // skip first line
+                String currentLine = bufferedReader.readLine();
+
+                while (true) {
+                    if (currentLine == null) {
+                        result = resultLines;
+                        break;
+                    }
+                    Ransomeware obj = this.processLine(currentLine);
+                    resultLines.add(obj);
+                    currentLine = bufferedReader.readLine();
+                }
+                BufferedReader extra = new BufferedReader(new FileReader(extraFile));
+                try{
+                    extra.readLine();
+                    String line = extra.readLine();
+                    while (true) {
+                        if (line == null) {
+                            break;
+                        }
+                        String[] fields = line.split(separator);
+                        int id = Integer.parseInt(fields[0]);
+                        Ransomeware ransomeware = resultLines.stream()
+                                .filter(r -> r.getId() == id)
+                                .findAny()
+                                .orElse(null);
+                        if(ransomeware != null){
+
+                            if(ransomeware.getModifiedRegisters() == null){
+                                List<String> reg = new ArrayList<String>();
+                                reg.add(fields[1]);
+                                ransomeware.setModifiedRegisters(reg);
+                            } else {
+                                List<String> reg = ransomeware.getModifiedRegisters();
+                                reg.add(fields[1]);
+                                ransomeware.setModifiedRegisters(reg);
+                            }
+                            int index = 0;
+                            for(Ransomeware element : resultLines){
+                                if(element.getId() == ransomeware.getId()){
+                                    findRating(ransomeware);
+                                    resultLines.set(index, ransomeware);
+                                    break;
+                                }
+                                index += 1;
+                            }
+                        }
+
+                        line = extra.readLine();
+                    }
+                } catch (Throwable t){
+                    try {
+                        extra.close();
+                    } catch (Throwable s) {
+                        t.addSuppressed(s);
+                    }
+                    throw t;
+                }
+                result = resultLines;
+
+            } catch (Throwable anything) {
+                try {
+                    bufferedReader.close();
+                } catch (Throwable something) {
+                    anything.addSuppressed(something);
+                }
+                throw anything;
+            }
+
+            bufferedReader.close();
+            initList(result);
+            return result;
+        } catch (FileNotFoundException e1) {
+            System.out.println("File not found");
+            initList(Collections.emptyList());
+            return Collections.emptyList();
+        } catch (IOException | ParseException e2) {
+            System.out.println("Cannot read from file");
+            initList(Collections.emptyList());
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public Ransomeware processLine(String line) throws ParseException {
+        String[] fields = line.split(separator);
+        int id = 0;
+        try{
+            id = Integer.parseInt(fields[0]);
+        } catch (Exception e){
+            System.out.println("The id must be an int");
+        }
+        String name = fields[1];
+        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(fields[2]);
+        String infection = fields[3];
+        double encryption = 0.0;
+        try{
+            encryption = Double.parseDouble(fields[4]);
+        } catch (Exception e){
+            System.out.println("The encryption rating must be a double");
+        }
+        double hiding = 0.0;
+        try{
+            hiding = Double.parseDouble(fields[5]);
+        } catch (Exception e){
+            System.out.println("The hiding rating must be a double");
+        }
+        return new Ransomeware(id, 0.0, date, name, infection, new ArrayList<String>(), encryption, hiding);
+
+    }
+
+    public String getAntet(){
+        return "";
+    }
+
+    public void write(List<Ransomeware> objects){
+        String fileName = this.getFileName();
+        File file = new File(fileName);
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+            try{
+                String CSVline = "Id,Name,Creation Date,Infection Method,Encryption Rating,Hiding Rating\n";
+                bufferedWriter.write(CSVline);
+            } catch (Throwable anything){
+                throw anything;
+            }
+            if(objects != null){
+                for(Ransomeware object : objects){
+                    try{
+                        String CSVline = this.convertObjectToString(object);
+                        bufferedWriter.write(CSVline);
+                    } catch (Throwable anything){
+                        throw anything;
+                    }
+                }
+
+            }
+            bufferedWriter.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        String fileName1 = "resources/CSV PAO Daria - Ransomeware _Extra.csv";
+        File file1 = new File(fileName1);
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file1, false));
+            try{
+                String CSVline = "Id,Modified Register\n";
+                bufferedWriter.write(CSVline);
+            } catch (Throwable anything){
+                throw anything;
+            }
+            if(objects != null){
+                for(Ransomeware object : objects){
+                    for(String reg : object.getModifiedRegisters()) {
+                        try{
+                            String CSVline = object.getId() + separator + reg + "\n";
+                            bufferedWriter.write(CSVline);
+                        } catch (Throwable anything){
+                            throw anything;
+                        }
+                    }
+                }
+
+            }
+            bufferedWriter.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+
 }

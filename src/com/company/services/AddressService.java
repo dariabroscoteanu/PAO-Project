@@ -2,15 +2,15 @@ package com.company.services;
 
 import com.company.entities.Address;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class AddressService implements AddressInterface {
+public class AddressService implements AddressInterface, CSVReaderWriter<Address> {
     private List<Address> addresses = new ArrayList<>();
     private static AddressService instance;
 
-    private AddressService(){}
+    private AddressService(){
+        read();
+    }
 
     public static AddressService getInstance(){
         if(instance == null){
@@ -70,17 +70,54 @@ public class AddressService implements AddressInterface {
         }
 
         System.out.println("Address Line");
-        address.setAddressLine(scanner.next());
+        address.setAddressLine(scanner.nextLine());
 
         System.out.println("Street");
-        address.setStreet(scanner.next());
+        address.setStreet(scanner.nextLine());
 
         System.out.println("City");
-        address.setCity(scanner.next());
+        address.setCity(scanner.nextLine());
 
         System.out.println("Country");
-        address.setCountry(scanner.next());
+        address.setCountry(scanner.nextLine());
 
         return address;
+    }
+
+    @Override
+    public String getAntet() {
+        return "Id,Street,City,Country,Address Line\n";
+    }
+
+    @Override
+    public String getFileName() {
+        String path = "resources/CSV PAO Daria - Address.csv";
+        return path;
+    }
+
+    @Override
+    public String convertObjectToString(Address object) {
+        String line = object.getId() + separator + object.getStreet() + separator + object.getCity() + separator + object.getCountry() + separator + object.getAddressLine() + "\n";
+        return line;
+    }
+
+    @Override
+    public Address processLine(String line){
+        String[] fields = line.split(separator);
+        int id = 0;
+        try{
+            id = Integer.parseInt(fields[0]);
+        } catch (Exception e){
+            System.out.println("The id must be an int");
+        }
+        String street = fields[1];
+        String city = fields[2];
+        String country = fields[3];
+        String addressLine = fields[4];
+        return new Address(id, street, city, country, addressLine);
+    }
+
+    public void initList(List<Address> objects){
+        this.addresses = new ArrayList<Address>(objects);
     }
 }

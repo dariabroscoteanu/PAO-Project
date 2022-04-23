@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.*;
 
 public class Service {
+    private AddressService addressService = AddressService.getInstance();
     private RootkitService rootkitService = RootkitService.getInstance();
     private RansomewareService ransomewareService = RansomewareService.getInstance();
     private KeyloggerService keyloggerService = KeyloggerService.getInstance();
@@ -38,6 +39,21 @@ public class Service {
         return instance;
     }
 
+    public void writeResults(){
+        addressService.write(addressService.getAddresses());
+
+        rootkitService.write(rootkitService.getRootkits());
+        ransomewareService.write(ransomewareService.getRansomewares());
+        keyloggerService.write(keyloggerService.getKeyloggers());
+        kernelKeyloggerService.write(kernelKeyloggerService.getKernelKeyloggers());
+
+        employeeService.write(employeeService.getEmployees());
+        customerService.write(customerService.getCustomers());
+
+        computerService.write(computerService.getComputers());
+
+        companyService.write(companyService.getCompanies());
+    }
 
     public void printUserMenu(){
         System.out.println(" 0 - Employee");
@@ -663,12 +679,13 @@ public class Service {
     public void computerMenu() throws ParseException {
         while(true) {
             printOptions();
+            System.out.println(" 6 - Calculate total infection rating by id");
             int option;
             try {
                 option = scanner.nextInt();
             }
             catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
+                System.out.println("Provide an int between 0 and 6");
                 option = scanner.nextInt();
             }
             if (option == 0) {
@@ -822,6 +839,34 @@ public class Service {
                 }
             } else if (option == 5) {
                 break;
+            } else if(option == 6){
+                int index;
+                try {
+                    index = scanner.nextInt();
+                } catch (Exception e){
+                    System.out.println("Provide valid id");
+                    index = scanner.nextInt();
+                }
+                if(computerService.getComputers().size() == 0){
+                    System.out.println("No computers");
+                }
+                boolean ok = false;
+                Computer computer = null;
+                for (int i = 0; i < computerService.getComputers().size(); ++i){
+                    if(computerService.getComputers().get(i).getId() == index){
+                        computer = computerService.getComputers().get(i);
+                        ok = true;
+                        break;
+                    }
+                }
+                if(ok){
+                    double rating = computerService.calculateTotalRating(computer);
+                    System.out.println("Total infection rating for this computer is: " + rating);
+                } else {
+                    System.out.println("No computer with this id");
+                }
+
+
             }
         }
     }
@@ -1042,5 +1087,6 @@ public class Service {
                 break;
             }
         }
+        writeResults();
     }
 }

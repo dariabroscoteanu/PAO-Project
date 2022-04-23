@@ -35,7 +35,7 @@ public class Ransomeware extends Malware {
     @Override
     public String toString() {
         return ("Malware name: " + this.name) + "\n" + "Malware type: Ransomeware" + '\n' + "Rating: " +
-                this.rating + '\n' + "Infection Date: " + this.creationDate + '\n' + "Infection Method: " + this.infectionMethod;
+                this.rating + '\n' + "Infection Date: " + this.creationDate + '\n' + "Infection Method: " + this.infectionMethod + "\n";
     }
 
     @Override

@@ -49,4 +49,21 @@ public class Computer {
         this.totalRating = totalRating;
     }
 
+    @Override
+    public String toString(){
+        String result = "Computer id: " + id + "\n";
+        if(malwares != null) {
+            for (Malware malware : malwares) {
+                result += malware.toString();
+            }
+        }
+        if(users != null) {
+            for (User user : users) {
+                result += user.toString();
+            }
+        }
+        result += "\n---------------------------------------------------------------------------------------------------------------------------\n";
+        return result;
+    }
+
 }

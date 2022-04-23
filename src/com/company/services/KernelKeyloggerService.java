@@ -1,19 +1,21 @@
 package com.company.services;
 
 import com.company.entities.KernelKeylogger;
+import com.company.entities.Ransomeware;
 
+import java.io.*;
+import java.net.Inet4Address;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class KernelKeyloggerService implements KernelKeyloggerInterface {
+public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVReaderWriter<KernelKeylogger> {
     private List<KernelKeylogger> kernelKeyloggers = new ArrayList<>();
     private static KernelKeyloggerService instance;
 
-    private KernelKeyloggerService(){}
+    private KernelKeyloggerService(){
+        read();
+    }
 
     public static KernelKeyloggerService getInstance(){
         if(instance == null){
@@ -112,21 +114,21 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface {
         }
 
         System.out.println("Name");
-        kernelKeylogger.setName(scanner.next());
+        kernelKeylogger.setName(scanner.nextLine());
 
         System.out.println("Creation Date - dd/mm/yyyy");
         String date;
         try {
-            date = scanner.next();
+            date = scanner.nextLine();
         } catch (Exception e){
             System.out.println("Provide date in format - dd/mm/yyyy");
-            date = scanner.next();
+            date = scanner.nextLine();
         }
         Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
         kernelKeylogger.setCreationDate(date1);
 
         System.out.println("Infection Method");
-        kernelKeylogger.setInfectionMethod(scanner.next());
+        kernelKeylogger.setInfectionMethod(scanner.nextLine());
 
         System.out.println("Number of modified registers");
         int nr;
@@ -139,7 +141,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface {
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
-            String str = scanner.next();
+            String str = scanner.nextLine();
             arr.add(str);
         }
         kernelKeylogger.setModifiedRegisters(arr);
@@ -154,7 +156,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface {
         System.out.println("Used Functions");
         ArrayList<String> arr1 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
-            String str = scanner.next();
+            String str = scanner.nextLine();
             arr1.add(str);
         }
         kernelKeylogger.setUsedFunctions(arr1);
@@ -169,7 +171,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface {
         System.out.println("Used keys");
         ArrayList<String> arr2 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
-            String str = scanner.next();
+            String str = scanner.nextLine();
             arr2.add(str);
         }
         kernelKeylogger.setUsedKeys(arr2);
@@ -192,4 +194,261 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface {
         findRating(kernelKeylogger);
         return kernelKeylogger;
     }
+
+
+    @Override
+    public String getAntet() {
+        return "";
+    }
+
+    @Override
+    public KernelKeylogger processLine(String line) throws ParseException {
+        String[] fields = line.split(separator);
+        int id = 0;
+        try{
+            id = Integer.parseInt(fields[0]);
+        } catch (Exception e){
+            System.out.println("The id must be an int");
+        }
+        String name = fields[1];
+        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(fields[2]);
+        String infection = fields[3];
+
+        String records = fields[4];
+        boolean ok1 = false;
+        if(Objects.equals(records, "TRUE")){
+            ok1 = true;
+        }
+
+        boolean ok2 = false;
+        String files = fields[5];
+        if(Objects.equals(files, "TRUE")){
+            ok2 = true;
+        }
+        return new KernelKeylogger(id, 0.0, date, name, infection, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), ok1, ok2);
+
+    }
+
+    @Override
+    public String getFileName() {
+        String path = "resources/CSV PAO Daria - KernelKeylogger.csv";
+        return path;
+    }
+
+    @Override
+    public String convertObjectToString(KernelKeylogger object) {
+        String ok1 = "FALSE", ok2 = "FALSE";
+        if(object.isHidingRecords()){
+            ok1 = "TRUE";
+        }
+        if(object.isHidingFiles()){
+            ok2 = "TRUE";
+        }
+        Date date = object.getCreationDate();
+        String dateString = new SimpleDateFormat("dd/MM/yyyy").format(date);
+        String line = object.getId() + separator + object.getName() + separator + dateString + separator + object.getInfectionMethod() + separator + ok1 + separator + ok2+  "\n";
+        return line;
+    }
+
+    @Override
+    public void initList(List<KernelKeylogger> objects) {
+        kernelKeyloggers = new ArrayList<KernelKeylogger>(objects);
+    }
+
+    public List<KernelKeylogger> read() {
+        String fileName = this.getFileName();
+        File file = new File(fileName);
+        String extraFileName = "resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
+        File extraFile = new File(extraFileName);
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            List<KernelKeylogger> result;
+
+            try {
+                List<KernelKeylogger> resultLines = new ArrayList<KernelKeylogger>();
+                bufferedReader.readLine(); // skip first line
+                String currentLine = bufferedReader.readLine();
+
+                while (true) {
+                    if (currentLine == null) {
+                        result = resultLines;
+                        break;
+                    }
+                    KernelKeylogger obj = this.processLine(currentLine);
+                    resultLines.add(obj);
+                    currentLine = bufferedReader.readLine();
+                }
+                BufferedReader extra = new BufferedReader(new FileReader(extraFile));
+                try{
+                    extra.readLine();
+                    String line = extra.readLine();
+                    while (true) {
+                        if (line == null) {
+                            break;
+                        }
+                        String[] fields = line.split(separator);
+                        int id = Integer.parseInt(fields[0]);
+                        KernelKeylogger kernelKeylogger = resultLines.stream()
+                                .filter(r -> r.getId() == id)
+                                .findAny()
+                                .orElse(null);
+                        if(kernelKeylogger != null){
+                            if(kernelKeylogger.getModifiedRegisters().size() == 0){
+                                List<String> reg = new ArrayList<String>();
+                                reg.add(fields[1]);
+                                kernelKeylogger.setModifiedRegisters(reg);
+                            } else {
+                                List<String> reg = kernelKeylogger.getModifiedRegisters();
+                                reg.add(fields[1]);
+                                kernelKeylogger.setModifiedRegisters(reg);
+                            }
+                            if(kernelKeylogger.getUsedFunctions().size() == 0){
+                                List<String> func = new ArrayList<String>();
+                                func.add(fields[2]);
+                                kernelKeylogger.setUsedFunctions(func);
+                            } else {
+                                List<String> func = kernelKeylogger.getUsedFunctions();
+                                func.add(fields[2]);
+                                kernelKeylogger.setUsedFunctions(func);
+                            }
+                            if(kernelKeylogger.getUsedKeys().size() == 0){
+                                List<String> keys = new ArrayList<String>();
+                                keys.add(fields[3]);
+                                kernelKeylogger.setUsedKeys(keys);
+                            } else {
+                                List<String> keys = kernelKeylogger.getUsedFunctions();
+                                keys.add(fields[3]);
+                                kernelKeylogger.setUsedKeys(keys);
+                            }
+                            int index = 0;
+                            for(KernelKeylogger element : resultLines){
+                                if(element.getId() == kernelKeylogger.getId()){
+                                    findRating(kernelKeylogger);
+                                    resultLines.set(index, kernelKeylogger);
+                                    break;
+                                }
+                                index += 1;
+                            }
+                        }
+
+                        line = extra.readLine();
+                    }
+                } catch (Throwable t){
+                    try {
+                        extra.close();
+                    } catch (Throwable s) {
+                        t.addSuppressed(s);
+                    }
+                    throw t;
+                }
+                result = resultLines;
+
+            } catch (Throwable anything) {
+                try {
+                    bufferedReader.close();
+                } catch (Throwable something) {
+                    anything.addSuppressed(something);
+                }
+                throw anything;
+            }
+
+            //bufferedReader.close();
+            initList(result);
+            return result;
+        } catch (FileNotFoundException e1) {
+            System.out.println("File not found");
+            initList(Collections.emptyList());
+            return Collections.emptyList();
+        } catch (IOException | ParseException e2) {
+            System.out.println("Cannot read from file");
+            initList(Collections.emptyList());
+            return Collections.emptyList();
+        }
+    }
+
+    public void write(List<KernelKeylogger> objects){
+        String fileName = this.getFileName();
+        File file = new File(fileName);
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+            try{
+                String CSVline = "Id,Name,Creation Date,Infection Method,Is Hiding Records,Is Hiding Files\n";
+                bufferedWriter.write(CSVline);
+            } catch (Throwable anything){
+                throw anything;
+            }
+            if(objects != null){
+                for(KernelKeylogger object : objects){
+                    try{
+                        String CSVline = this.convertObjectToString(object);
+                        bufferedWriter.write(CSVline);
+                    } catch (Throwable anything){
+                        throw anything;
+                    }
+                }
+
+            }
+            bufferedWriter.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        fileName = "resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
+        file = new File(fileName);
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+            try{
+                String CSVline = "Id,Modified Register,Used Function,Used Key\n";
+                bufferedWriter.write(CSVline);
+            } catch (Throwable anything){
+                throw anything;
+            }
+            if(objects != null){
+                for(KernelKeylogger object : objects){
+                    List<String> reg = object.getModifiedRegisters();
+                    List<String> func = object.getUsedFunctions();
+                    List<String> keys = object.getUsedKeys();
+                    int nr = Integer.max(reg.size(), func.size());
+                    nr = Integer.max(nr, keys.size());
+                    while(nr > 0){
+                        String CSVline = object.getId() + separator;
+                        if(reg.size() > 0){
+                            CSVline += reg.get(0) + separator;
+                            reg.remove(0);
+                        } else {
+                            CSVline += "" + separator;
+                        }
+
+                        if(func.size() > 0){
+                            CSVline += func.get(0) + separator;
+                            func.remove(0);
+                        } else {
+                            CSVline += "" + separator;
+                        }
+
+                        if(keys.size() > 0){
+                            CSVline += keys.get(0);
+                            keys.remove(0);
+                        } else {
+                            CSVline += "";
+                        }
+                        try{
+                            CSVline +=  "\n";
+                            bufferedWriter.write(CSVline);
+                        } catch (Throwable anything){
+                            throw anything;
+                        }
+                        nr -= 1;
+                    }
+                }
+
+            }
+            bufferedWriter.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
 }

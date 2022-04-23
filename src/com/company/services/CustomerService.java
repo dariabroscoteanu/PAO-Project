@@ -4,16 +4,19 @@ package com.company.services;
 
 import com.company.entities.Address;
 import com.company.entities.Customer;
+import com.company.entities.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CustomerService implements CustomerInterface{
+public class CustomerService implements CustomerInterface, CSVReaderWriter<Customer>{
     private List<Customer> customers = new ArrayList<>();
     private static CustomerService instance;
 
-    private CustomerService(){}
+    private CustomerService(){
+        read();
+    }
 
     public static CustomerService getInstance(){
         if(instance == null){
@@ -83,17 +86,18 @@ public class CustomerService implements CustomerInterface{
         }
 
         System.out.println("Name");
-        customer.setName(scanner.next());
+        customer.setName(scanner.nextLine());
 
         System.out.println("Email");
-        customer.setEmail(scanner.next());
+        customer.setEmail(scanner.nextLine());
 
         System.out.println("Address");
         Address address = addressService.readAddress();
+        addressService.addAddress(address);
         customer.setAddress(address);
 
         System.out.println("Usage");
-        customer.setUsage(scanner.next());
+        customer.setUsage(scanner.nextLine());
 
         System.out.println("Taxes");
         try {
@@ -104,4 +108,57 @@ public class CustomerService implements CustomerInterface{
         }
         return customer;
     }
+
+    @Override
+    public String getFileName() {
+        String path = "resources/CSV PAO Daria - Customer.csv";
+        return path;
+    }
+
+    @Override
+    public String getAntet(){
+        return "Id,Name,Email,Usage,Taxes,Address Id\n";
+    }
+
+    @Override
+    public String convertObjectToString(Customer object) {
+        String line = object.getId() + separator + object.getName() + separator + object.getEmail() + separator + object.getUsage() + separator + object.getTaxes() + separator + object.getAddress().getId() +  "\n";
+        return line;
+    }
+
+    @Override
+    public void initList(List<Customer> objects) {
+        customers = new ArrayList<Customer>(objects);
+    }
+
+    @Override
+    public Customer processLine(String line){
+        String[] fields = line.split(separator);
+        int id = 0;
+        try{
+            id = Integer.parseInt(fields[0]);
+        } catch (Exception e){
+            System.out.println("The id must be an int");
+        }
+        String name = fields[1];
+        String email = fields[2];
+        String usage = fields[3];
+        double taxes = 0.0;
+        try{
+            taxes = Double.parseDouble(fields[4]);
+        } catch (Exception e){
+            System.out.println("The salary must be a double");
+        }
+        int addressId = Integer.parseInt(fields[5]);
+        //System.out.println(addressId);
+        AddressService addressService = AddressService.getInstance();
+        Address address = new Address();
+        try{
+            address = addressService.getAddressById(addressId);
+        } catch (Exception e){
+            System.out.println("The address doesnt exist");
+        }
+        return new Customer(id, address, name, email, usage, taxes);
+    }
+
 }

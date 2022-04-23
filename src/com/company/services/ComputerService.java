@@ -1,24 +1,20 @@
 package com.company.services;
 
 
-import com.company.entities.Computer;
-import com.company.entities.KernelKeylogger;
-import com.company.entities.Keylogger;
-import com.company.entities.Ransomeware;
-import com.company.entities.Rootkit;
-import com.company.entities.Customer;
-import com.company.entities.Employee;
+import com.company.entities.*;
 
+import java.io.*;
+import java.security.Key;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class ComputerService implements ComputerInterface {
+public class ComputerService implements ComputerInterface, CSVReaderWriter<Computer> {
     private List<Computer> computers = new ArrayList<>();
     private static ComputerService instance;
 
-    private ComputerService(){}
+    private ComputerService(){
+        read();
+    }
 
     public static ComputerService getInstance(){
         if(instance == null){
@@ -132,18 +128,22 @@ public class ComputerService implements ComputerInterface {
             }
             if(opt == 0) {
                 Rootkit rootkit = rootkitService.readRootkit();
+                rootkitService.addRootkit(rootkit);
                 arr.add(rootkit);
             }
             else if(opt == 1){
                 Ransomeware  ransomeware = ransomewareService.readRansomeware();
+                ransomewareService.addRansomeware(ransomeware);
                 arr.add(ransomeware);
             }
             else if(opt == 2){
                 Keylogger keylogger = keyloggerService.readKeylogger();
+                keyloggerService.addKeylogger(keylogger);
                 arr.add(keylogger);
             }
             else if(opt == 3){
                 KernelKeylogger kernelKeylogger = kernelKeyloggerService.readKernelkeylogger();
+                kernelKeyloggerService.addKernelKeylogger(kernelKeylogger);
                 arr.add(kernelKeylogger);
             }
         }
@@ -170,10 +170,12 @@ public class ComputerService implements ComputerInterface {
                 opt = scanner.nextInt();
             }
             if(opt == 0){
-                Customer costumer = customerService.readCustomer();
-                arr1.add(costumer);
+                Customer customer = customerService.readCustomer();
+                customerService.addCustomer(customer);
+                arr1.add(customer);
             } else if (opt == 1) {
                 Employee employee = employeeService.readEmployee();
+                employeeService.addEmployees(employee);
                 arr1.add(employee);
             }
         }
@@ -182,4 +184,367 @@ public class ComputerService implements ComputerInterface {
 
         return computer;
     }
+
+
+    @Override
+    public String getAntet(){
+        return "";
+    }
+
+    @Override
+    public Computer processLine(String line) throws ParseException{
+        return null;
+    }
+
+    @Override
+    public String getFileName(){
+        return "";
+    }
+
+    @Override
+    public String convertObjectToString(Computer object) {
+        String line = "";
+        return line;
+    }
+
+    public void initList(List<Computer> objects){
+        this.computers = new ArrayList<>(objects);
+    }
+
+
+    public List<Computer> read() {
+        String fileNameUser = "resources/CSV PAO Daria - Computer_User.csv";
+        String fileNameMalware = "resources/CSV PAO Daria - Computer_Malware.csv";
+        File file1 = new File(fileNameUser);
+        File file2 = new File(fileNameMalware);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file1));
+            BufferedReader bufferedReader1 = new BufferedReader(new FileReader(file2));
+            List<Computer> result;
+
+            try {
+                List<Computer> resultLines = new ArrayList<Computer>();
+                bufferedReader.readLine(); // skip first line
+                bufferedReader1.readLine(); // skip first line
+                String currentLine = bufferedReader.readLine();
+                String currentLine1 = bufferedReader1.readLine();
+
+                while (true) {
+                    if (currentLine == null) {
+                        result = resultLines;
+                        break;
+                    }
+                    String[] fields = currentLine.split(separator);
+                    int computerId = Integer.parseInt(fields[0]);
+                    int employeeId = Integer.parseInt(fields[1]);
+                    int customerId = Integer.parseInt(fields[2]);
+                    CustomerService customerService = CustomerService.getInstance();
+                    EmployeeService employeeService = EmployeeService.getInstance();
+
+                    Computer computer = resultLines.stream()
+                            .filter(r -> r.getId() == computerId)
+                            .findAny()
+                            .orElse(null);
+                    if(computer != null){
+                        resultLines.add(computer);
+                        List<User> users;
+                        if(computer.getUsers() != null) {
+                             users = computer.getUsers();
+                        } else {
+                            users = new ArrayList<>();
+                        }
+                        customerService.getCustomers().stream()
+                                .filter(r -> r.getId() == customerId)
+                                .findAny().ifPresent(users::add);
+                        employeeService.getEmployees().stream()
+                                .filter(r -> r.getId() == employeeId)
+                                .findAny().ifPresent(users::add);
+                        computer.setUsers(new ArrayList(users));
+                        int index = 0;
+                        for(Computer element : resultLines){
+                            if(element.getId() == computer.getId()){
+                                resultLines.set(index, computer);
+                                break;
+                            }
+                            index += 1;
+                        }
+                    } else {
+                        computer = new Computer();
+                        computer.setId(computerId);
+                        List<User> users = new ArrayList<>();
+
+                        customerService.getCustomers().stream()
+                                .filter(r -> r.getId() == customerId)
+                                .findAny().ifPresent(users::add);
+                        employeeService.getEmployees().stream()
+                                .filter(r -> r.getId() == employeeId)
+                                .findAny().ifPresent(users::add);
+                        computer.setUsers(new ArrayList(users));
+                        resultLines.add(computer);
+                    }
+                    currentLine = bufferedReader.readLine();
+                }
+
+
+                while (true) {
+                    if (currentLine1 == null) {
+                        result = resultLines;
+                        break;
+                    }
+                    String[] fields = currentLine1.split(separator);
+                    //System.out.println(currentLine1);
+                    int computerId = Integer.parseInt(fields[0]);
+                    int rootkitId = Integer.parseInt(fields[1]);
+                    int keyloggerId = Integer.parseInt(fields[2]);
+                    int kernelKeyloggerId = Integer.parseInt(fields[2]);
+                    int ransomewareId = Integer.parseInt(fields[2]);
+                    RootkitService rootkitService = RootkitService.getInstance();
+                    KeyloggerService keyloggerService = KeyloggerService.getInstance();
+                    RansomewareService ransomewareService = RansomewareService.getInstance();
+                    KernelKeyloggerService kernelKeyloggerService = KernelKeyloggerService.getInstance();
+                    Computer computer = resultLines.stream()
+                            .filter(r -> r.getId() == computerId)
+                            .findAny()
+                            .orElse(null);
+                    if(computer != null){
+                        //resultLines.add(computer);
+                        List<Malware> malwares;
+                        if(computer.getMalwares() != null) {
+                            malwares = computer.getMalwares();
+                        } else {
+                            malwares = new ArrayList<>();
+                        }
+                        rootkitService.getRootkits().stream()
+                                .filter(r -> r.getId() == rootkitId)
+                                .findAny().ifPresent(malwares::add);
+                        keyloggerService.getKeyloggers().stream()
+                                .filter(r -> r.getId() == keyloggerId)
+                                .findAny().ifPresent(malwares::add);
+                        ransomewareService.getRansomewares().stream()
+                                .filter(r -> r.getId() == ransomewareId)
+                                .findAny().ifPresent(malwares::add);
+                        kernelKeyloggerService.getKernelKeyloggers().stream()
+                                .filter(r -> r.getId() == kernelKeyloggerId)
+                                .findAny().ifPresent(malwares::add);
+                        computer.setMalwares(new ArrayList(malwares));
+                        int index = 0;
+                        for(Computer element : resultLines){
+                            if(element.getId() == computer.getId()){
+                                resultLines.set(index, computer);
+                                resultLines.set(index, computer);
+                                break;
+                            }
+                            index += 1;
+                        }
+                    } else {
+                        computer = new Computer();
+                        computer.setId(computerId);
+                        List<Malware> malwares = new ArrayList<>();
+                        rootkitService.getRootkits().stream()
+                                .filter(r -> r.getId() == rootkitId)
+                                .findAny().ifPresent(malwares::add);
+                        keyloggerService.getKeyloggers().stream()
+                                .filter(r -> r.getId() == keyloggerId)
+                                .findAny().ifPresent(malwares::add);
+                        ransomewareService.getRansomewares().stream()
+                                .filter(r -> r.getId() == ransomewareId)
+                                .findAny().ifPresent(malwares::add);
+                        kernelKeyloggerService.getKernelKeyloggers().stream()
+                                .filter(r -> r.getId() == kernelKeyloggerId)
+                                .findAny().ifPresent(malwares::add);
+                        computer.setMalwares(new ArrayList(malwares));
+                        resultLines.add(computer);
+                    }
+                    currentLine1 = bufferedReader1.readLine();
+                }
+            } catch (Throwable anything) {
+                try {
+                    bufferedReader.close();
+                } catch (Throwable something) {
+                    anything.addSuppressed(something);
+                }
+                throw anything;
+            }
+
+            bufferedReader.close();
+            initList(result);
+            return result;
+        } catch (FileNotFoundException e1) {
+            System.out.println("File not found");
+            initList(Collections.emptyList());
+            return Collections.emptyList();
+        } catch (IOException e2) {
+            System.out.println("Cannot read from file");
+            initList(Collections.emptyList());
+            return Collections.emptyList();
+        }
+    }
+
+    public void write(List<Computer> objects){
+        String fileNameMalware = "resources/CSV PAO Daria - Computer_Malware.csv";
+        File fileMalware = new File(fileNameMalware);
+        String fileName = "resources/CSV PAO Daria - Computer_User.csv";
+        File file = new File(fileName);
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileMalware, false));
+            try{
+                String CSVline = "Id,Id Rootkit,Id Keylogger,Id KernelKeylogger,Id Ransomeware\n";
+                bufferedWriter.write(CSVline);
+            } catch (Throwable anything){
+                throw anything;
+            }
+            if(objects != null){
+                for(Computer object : objects){
+                    if(object.getMalwares() != null){
+                        int id = object.getId();
+                        String line = "";
+                        List<Integer> rootkits = new ArrayList<>();
+                        List<Integer> ransomewares = new ArrayList<>();
+                        List<Integer> keyloggers = new ArrayList<>();
+                        List<Integer> kernelKeyloggers = new ArrayList<>();
+                        for(Malware malware: object.getMalwares()){
+                            if(malware instanceof Rootkit){
+                                Rootkit rootkit = (Rootkit) malware;
+                                rootkits.add(rootkit.getId());
+                            }
+                            else if(malware instanceof Ransomeware){
+                                Ransomeware ransomeware = (Ransomeware) malware;
+                                ransomewares.add(ransomeware.getId());
+                            }
+                            else if(malware instanceof Keylogger){
+                                if( malware instanceof KernelKeylogger){
+                                    KernelKeylogger kernelKeylogger = (KernelKeylogger) malware;
+                                    kernelKeyloggers.add(kernelKeylogger.getId());
+                                }
+                                else {
+                                    Keylogger keylogger = (Keylogger) malware;
+                                    keyloggers.add(keylogger.getId());
+                                }
+                            }
+                        }
+                        int nr = Integer.max(Integer.max(rootkits.size(), ransomewares.size()), Integer.max(kernelKeyloggers.size(), keyloggers.size()));
+                        while(nr > 0){
+                            line = id + separator;
+                            if(rootkits.size() > 0){
+                                line += rootkits.get(0) + separator;
+                                rootkits.remove(0);
+                            } else {
+                                line += "" + separator;
+                            }
+
+                            if(keyloggers.size() > 0){
+                                line += keyloggers.get(0) + separator;
+                                keyloggers.remove(0);
+                            } else {
+                                line += "" + separator;
+                            }
+
+                            if(kernelKeyloggers.size() > 0){
+                                line += kernelKeyloggers.get(0) + separator;
+                                kernelKeyloggers.remove(0);
+                            } else {
+                                line += "" + separator;
+                            }
+
+                            if(ransomewares.size() > 0){
+                                line += ransomewares.get(0);
+                                ransomewares.remove(0);
+                            } else {
+                                line += "";
+                            }
+                            line += "\n";
+                            nr -= 1;
+                            try{
+                                bufferedWriter.write(line);
+                            } catch (Throwable anything){
+//                                try {
+//                                    bufferedWriter.close();
+//                                } catch (Throwable something) {
+//                                    anything.addSuppressed(something);
+//                                }
+                                throw anything;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+            try {
+                bufferedWriter.close();
+            } catch (Throwable something) {
+                throw something;
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+            try{
+                String CSVline = "Id,Id Employee,Id Customer\n";
+                bufferedWriter.write(CSVline);
+            } catch (Throwable anything){
+                throw anything;
+            }
+            if(objects != null){
+                for(Computer object : objects){
+                    if(object.getUsers() != null){
+                        int id = object.getId();
+                        String line = "";
+                        List<Integer> customers = new ArrayList<>();
+                        List<Integer> employees = new ArrayList<>();
+                        for(User user: object.getUsers()){
+                            if(user instanceof Customer){
+                                Customer customer = (Customer) user;
+                                customers.add(customer.getId());
+                            }
+                            else if(user instanceof Employee){
+                                Employee employee = (Employee) user;
+                                employees.add(employee.getId());
+                            }
+                        }
+                        int nr = Integer.max(employees.size(), customers.size());
+                        while(nr > 0){
+                            line = id + separator;
+                            if(employees.size() > 0){
+                                line += employees.get(0) + separator;
+                                employees.remove(0);
+                            } else {
+                                line += "" + separator;
+                            }
+
+                            if(customers.size() > 0){
+                                line += customers.get(0);
+                                customers.remove(0);
+                            } else {
+                                line += "";
+                            }
+
+                            line += "\n";
+                            nr -= 1;
+                            try{
+                                bufferedWriter.write(line);
+                            } catch (Throwable anything){
+
+                                throw anything;
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+            try {
+                bufferedWriter.close();
+            } catch (Throwable something) {
+                throw something;
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
 }

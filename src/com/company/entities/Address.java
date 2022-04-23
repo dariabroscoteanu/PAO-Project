@@ -9,7 +9,8 @@ public class Address {
 
     public Address() {}
 
-    public Address(String street, String city, String country, String addressLine) {
+    public Address(int id, String street, String city, String country, String addressLine) {
+        this.id = id;
         this.street = street;
         this.city = city;
         this.country = country;
@@ -58,6 +59,6 @@ public class Address {
 
     @Override
     public String toString(){
-        return "Address{country='" + this.country + "', city='" + this.city + "', street='" + this.street + "', addressLine='" + this.addressLine + "}";
+        return "Address{id=" + this.id + ", country=" + this.country + ", city=" + this.city + ", street=" + this.street + ", addressLine=" + this.addressLine + "}";
     }
 }

@@ -77,13 +77,15 @@ public class CustomerService implements CustomerInterface, CSVReaderWriter<Custo
         Scanner scanner = new Scanner(System.in);
         AddressService addressService = AddressService.getInstance();
         Customer customer = new Customer();
-        System.out.println("Id");
-        try {
-            customer.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            customer.setId(scanner.nextInt());
-        }
+//        System.out.println("Id");
+//        try {
+//            customer.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Provide int");
+//            customer.setId(scanner.nextInt());
+//        }
+        int id = getMaxId() + 1;
+        customer.setId(id);
 
         System.out.println("Name");
         customer.setName(scanner.nextLine());
@@ -109,9 +111,19 @@ public class CustomerService implements CustomerInterface, CSVReaderWriter<Custo
         return customer;
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < customers.size(); ++i){
+            if(customers.get(i).getId() > max){
+                max = customers.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - Customer.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Customer.csv";
         return path;
     }
 
@@ -148,6 +160,9 @@ public class CustomerService implements CustomerInterface, CSVReaderWriter<Custo
             taxes = Double.parseDouble(fields[4]);
         } catch (Exception e){
             System.out.println("The salary must be a double");
+        }
+        if(fields[5].equals("null")){
+            fields[5] = "-1";
         }
         int addressId = Integer.parseInt(fields[5]);
         //System.out.println(addressId);

@@ -102,14 +102,17 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
     public Rootkit readRootkit() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         Rootkit rootkit = new Rootkit();
-        System.out.println("Id");
+//        System.out.println("Id");
+//
+//        try {
+//            rootkit.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Provide int");
+//            rootkit.setId(scanner.nextInt());
+//        }
 
-        try {
-            rootkit.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            rootkit.setId(scanner.nextInt());
-        }
+        int id = getMaxId() + 1;
+        rootkit.setId(id);
 
         System.out.println("Name");
         rootkit.setName(scanner.nextLine());
@@ -136,6 +139,7 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -151,6 +155,7 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Imports");
         Set<String> arr1 = new HashSet<>();
         for(int i = 0; i < nr; ++i){
@@ -166,6 +171,7 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Config Files");
         Set<String> arr2 = new HashSet<>();
         for(int i = 0; i < nr; ++i){
@@ -202,7 +208,7 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
 
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - Rootkit.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Rootkit.csv";
         return path;
     }
 
@@ -222,7 +228,7 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
     public List<Rootkit> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "resources/CSV PAO Daria - Rootkit_Extra.csv";
+        String extraFileName = "src/com/company/resources/CSV PAO Daria - Rootkit_Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -331,6 +337,16 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
         }
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < rootkits.size(); ++i){
+            if(rootkits.get(i).getId() > max){
+                max = rootkits.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     public void write(List<Rootkit> objects){
         String fileName = this.getFileName();
         File file = new File(fileName);
@@ -358,7 +374,7 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "resources/CSV PAO Daria - Rootkit_Extra.csv";
+        fileName = "src/com/company/resources/CSV PAO Daria - Rootkit_Extra.csv";
         file = new File(fileName);
 
         try{
@@ -382,21 +398,21 @@ public class RootkitService implements RootkitInterface, CSVReaderWriter<Rootkit
                             CSVline += reg.get(0) + separator;
                             reg.remove(0);
                         } else {
-                            CSVline += "" + separator;
+                            CSVline += "null" + separator;
                         }
 
                         if(func.size() > 0){;
                             CSVline += func.get(0)  + separator;
                             func.remove(0);
                         } else {
-                            CSVline += "" + separator;
+                            CSVline += "null" + separator;
                         }
 
                         if(keys.size() > 0){
-                            CSVline += keys.get(0)  + separator;
+                            CSVline += keys.get(0);
                             keys.remove(0);
                         } else {
-                            CSVline += "";
+                            CSVline += "null";
                         }
                         try{
                             CSVline +=  "\n";

@@ -7,6 +7,8 @@ import java.io.*;
 import java.security.Key;
 import java.text.ParseException;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ComputerService implements ComputerInterface, CSVReaderWriter<Computer> {
     private List<Computer> computers = new ArrayList<>();
@@ -92,6 +94,16 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
         return totalRating[0];
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < computers.size(); ++i){
+            if(computers.get(i).getId() > max){
+                max = computers.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     public Computer readComputer() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         RootkitService rootkitService = RootkitService.getInstance();
@@ -100,9 +112,10 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
         KernelKeyloggerService kernelKeyloggerService = KernelKeyloggerService.getInstance();
         EmployeeService employeeService = EmployeeService.getInstance();
         CustomerService customerService = CustomerService.getInstance();
-        System.out.println("Id");
+        //System.out.println("Id");
         Computer computer = new Computer();
-        computer.setId(scanner.nextInt());
+        int id = getMaxId() + 1;
+        computer.setId(id);
 
         System.out.println("Number of Malwares");
         int nr;
@@ -185,6 +198,30 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
         return computer;
     }
 
+    public void calculateTotalTaxesById(int index){
+        Computer computer = computers.stream()
+                .filter(r -> r.getId() == index)
+                .findAny()
+                .orElse(null);
+        double taxes = 0.0;
+        if(computer != null){
+            if(computer.getUsers() != null){
+                for(User user: computer.getUsers()){
+                    if(user instanceof Customer){
+                        Customer customer = (Customer) user;
+                        taxes += customer.getTaxes();
+                    }
+                }
+                System.out.println("Computer id: " + index + " -> taxes: " + taxes);
+            } else {
+                System.out.println("0 Users");
+            }
+        } else {
+            System.out.println("Computer not found");
+        }
+
+
+    }
 
     @Override
     public String getAntet(){
@@ -213,8 +250,8 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
 
 
     public List<Computer> read() {
-        String fileNameUser = "resources/CSV PAO Daria - Computer_User.csv";
-        String fileNameMalware = "resources/CSV PAO Daria - Computer_Malware.csv";
+        String fileNameUser = "src/com/company/resources/CSV PAO Daria - Computer_User.csv";
+        String fileNameMalware = "src/com/company/resources/CSV PAO Daria - Computer_Malware.csv";
         File file1 = new File(fileNameUser);
         File file2 = new File(fileNameMalware);
         try {
@@ -234,10 +271,13 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                         result = resultLines;
                         break;
                     }
-                    String[] fields = currentLine.split(separator);
-                    int computerId = Integer.parseInt(fields[0]);
-                    int employeeId = Integer.parseInt(fields[1]);
-                    int customerId = Integer.parseInt(fields[2]);
+                    List<String> fields = List.of(currentLine.split(separator));
+                    fields = fields.stream()
+                            .map(o -> Objects.equals(o, "null") ? "-1" : o)
+                            .collect(Collectors.toList());
+                    int computerId = Integer.parseInt(fields.get(0));
+                    int employeeId = Integer.parseInt(fields.get(1));
+                    int customerId = Integer.parseInt(fields.get(2));
                     CustomerService customerService = CustomerService.getInstance();
                     EmployeeService employeeService = EmployeeService.getInstance();
 
@@ -291,13 +331,16 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                         result = resultLines;
                         break;
                     }
-                    String[] fields = currentLine1.split(separator);
+                    List<String> fields = List.of(currentLine1.split(separator));
                     //System.out.println(currentLine1);
-                    int computerId = Integer.parseInt(fields[0]);
-                    int rootkitId = Integer.parseInt(fields[1]);
-                    int keyloggerId = Integer.parseInt(fields[2]);
-                    int kernelKeyloggerId = Integer.parseInt(fields[2]);
-                    int ransomewareId = Integer.parseInt(fields[2]);
+                    fields = fields.stream()
+                            .map(o -> Objects.equals(o, "null") ? "-1" : o)
+                            .collect(Collectors.toList());
+                    int computerId = Integer.parseInt(fields.get(0));
+                    int rootkitId = Integer.parseInt(fields.get(1));
+                    int keyloggerId = Integer.parseInt(fields.get(2));
+                    int kernelKeyloggerId = Integer.parseInt(fields.get(2));
+                    int ransomewareId = Integer.parseInt(fields.get(2));
                     RootkitService rootkitService = RootkitService.getInstance();
                     KeyloggerService keyloggerService = KeyloggerService.getInstance();
                     RansomewareService ransomewareService = RansomewareService.getInstance();
@@ -381,9 +424,9 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
     }
 
     public void write(List<Computer> objects){
-        String fileNameMalware = "resources/CSV PAO Daria - Computer_Malware.csv";
+        String fileNameMalware = "src/com/company/resources/CSV PAO Daria - Computer_Malware.csv";
         File fileMalware = new File(fileNameMalware);
-        String fileName = "resources/CSV PAO Daria - Computer_User.csv";
+        String fileName = "src/com/company/resources/CSV PAO Daria - Computer_User.csv";
         File file = new File(fileName);
 
         try{
@@ -430,28 +473,28 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                                 line += rootkits.get(0) + separator;
                                 rootkits.remove(0);
                             } else {
-                                line += "" + separator;
+                                line += "null" + separator;
                             }
 
                             if(keyloggers.size() > 0){
                                 line += keyloggers.get(0) + separator;
                                 keyloggers.remove(0);
                             } else {
-                                line += "" + separator;
+                                line += "null" + separator;
                             }
 
                             if(kernelKeyloggers.size() > 0){
                                 line += kernelKeyloggers.get(0) + separator;
                                 kernelKeyloggers.remove(0);
                             } else {
-                                line += "" + separator;
+                                line += "null" + separator;
                             }
 
                             if(ransomewares.size() > 0){
                                 line += ransomewares.get(0);
                                 ransomewares.remove(0);
                             } else {
-                                line += "";
+                                line += "null";
                             }
                             line += "\n";
                             nr -= 1;
@@ -512,14 +555,14 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                                 line += employees.get(0) + separator;
                                 employees.remove(0);
                             } else {
-                                line += "" + separator;
+                                line += "null" + separator;
                             }
 
                             if(customers.size() > 0){
                                 line += customers.get(0);
                                 customers.remove(0);
                             } else {
-                                line += "";
+                                line += "null";
                             }
 
                             line += "\n";

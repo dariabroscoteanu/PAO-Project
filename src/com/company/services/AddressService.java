@@ -61,13 +61,9 @@ public class AddressService implements AddressInterface, CSVReaderWriter<Address
     public Address readAddress(){
         Scanner scanner = new Scanner(System.in);
         Address address = new Address();
-        System.out.println("Id");
-        try {
-            address.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            address.setId(scanner.nextInt());
-        }
+        // System.out.println("Id");
+        int id = getMaxId() + 1;
+        address.setId(id);
 
         System.out.println("Address Line");
         address.setAddressLine(scanner.nextLine());
@@ -91,7 +87,7 @@ public class AddressService implements AddressInterface, CSVReaderWriter<Address
 
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - Address.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Address.csv";
         return path;
     }
 
@@ -101,21 +97,48 @@ public class AddressService implements AddressInterface, CSVReaderWriter<Address
         return line;
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < addresses.size(); ++i){
+            if(addresses.get(i).getId() > max){
+                max = addresses.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     @Override
     public Address processLine(String line){
         String[] fields = line.split(separator);
         int id = 0;
-        try{
-            id = Integer.parseInt(fields[0]);
-        } catch (Exception e){
-            System.out.println("The id must be an int");
+        if(Objects.equals(fields[0], "null")){
+            id = getMaxId();
+        } else {
+            try {
+                id = Integer.parseInt(fields[0]);
+            } catch (Exception e) {
+                System.out.println("The id must be an int");
+            }
         }
         String street = fields[1];
+//        if(Objects.equals(street, "null")){
+//            street = "";
+//        }
         String city = fields[2];
+//        if(Objects.equals(city, "null")){
+//            city = "";
+//        }
         String country = fields[3];
+//        if(Objects.equals(country, "null")){
+//            country = "";
+//        }
         String addressLine = fields[4];
+//        if(Objects.equals(addressLine, "null")){
+//            addressLine = "";
+//        }
         return new Address(id, street, city, country, addressLine);
     }
+
 
     public void initList(List<Address> objects){
         this.addresses = new ArrayList<Address>(objects);

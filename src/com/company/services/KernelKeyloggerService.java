@@ -105,13 +105,16 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
     public KernelKeylogger readKernelkeylogger() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         KernelKeylogger kernelKeylogger = new KernelKeylogger();
-        System.out.println("Id");
-        try {
-            kernelKeylogger.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            kernelKeylogger.setId(scanner.nextInt());
-        }
+//        System.out.println("Id");
+//        try {
+//            kernelKeylogger.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Provide int");
+//            kernelKeylogger.setId(scanner.nextInt());
+//        }
+
+        int id = getMaxId() + 1;
+        kernelKeylogger.setId(id);
 
         System.out.println("Name");
         kernelKeylogger.setName(scanner.nextLine());
@@ -138,6 +141,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -153,6 +157,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Used Functions");
         ArrayList<String> arr1 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -168,6 +173,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Used keys");
         ArrayList<String> arr2 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -231,7 +237,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
 
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - KernelKeylogger.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - KernelKeylogger.csv";
         return path;
     }
 
@@ -258,7 +264,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
     public List<KernelKeylogger> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
+        String extraFileName = "src/com/company/resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -367,6 +373,16 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         }
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < kernelKeyloggers.size(); ++i){
+            if(kernelKeyloggers.get(i).getId() > max){
+                max = kernelKeyloggers.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     public void write(List<KernelKeylogger> objects){
         String fileName = this.getFileName();
         File file = new File(fileName);
@@ -394,7 +410,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
+        fileName = "src/com/company/resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
         file = new File(fileName);
 
         try{
@@ -418,21 +434,21 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                             CSVline += reg.get(0) + separator;
                             reg.remove(0);
                         } else {
-                            CSVline += "" + separator;
+                            CSVline += "null" + separator;
                         }
 
                         if(func.size() > 0){
                             CSVline += func.get(0) + separator;
                             func.remove(0);
                         } else {
-                            CSVline += "" + separator;
+                            CSVline += "null" + separator;
                         }
 
                         if(keys.size() > 0){
                             CSVline += keys.get(0);
                             keys.remove(0);
                         } else {
-                            CSVline += "";
+                            CSVline += "null";
                         }
                         try{
                             CSVline +=  "\n";

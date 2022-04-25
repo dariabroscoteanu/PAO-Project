@@ -9,7 +9,12 @@ import com.company.entities.Rootkit;
 import com.company.entities.Customer;
 import com.company.entities.Employee;
 
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Service {
@@ -25,6 +30,8 @@ public class Service {
     private ComputerService computerService = ComputerService.getInstance();
 
     private CompanyService companyService = CompanyService.getInstance();
+
+    private AuditService auditService = AuditService.getInstance();
 
     private static Service instance;
 
@@ -61,7 +68,7 @@ public class Service {
         System.out.println(" 2 - Exit");
     }
 
-    public void userMenu(){
+    public void userMenu() throws IOException {
         while(true){
             printUserMenu();
             int option;
@@ -83,7 +90,7 @@ public class Service {
     }
 
 
-    public void customerMenu() {
+    public void customerMenu() throws IOException {
         while(true) {
             printOptions();
             int option;
@@ -95,6 +102,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Customers" , timeStamp);
                 if(customerService.getCustomers().size() == 0){
                     System.out.println("No customers");
                 }
@@ -102,6 +112,10 @@ public class Service {
                     System.out.println(customerService.getCustomers().get(i).toString());
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Customer By Id" , timeStamp);
+
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -125,9 +139,15 @@ public class Service {
                     System.out.println("This customer doesn't exist");
                 }
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Customer" , timeStamp);
                 Customer customer = customerService.readCustomer();
                 customerService.addCustomer(customer);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Customer" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -147,12 +167,16 @@ public class Service {
                 }
                 if(ok){
                     Customer customer = customerService.readCustomer();
+                    customer.setId(index);
                     customerService.updateCustomer(index, customer);
                 } else {
                     System.out.println("No customer with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Customer" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -195,6 +219,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Employees" , timeStamp);
                 if(employeeService.getEmployees().size() == 0){
                     System.out.println("No employees");
                 }
@@ -202,6 +229,9 @@ public class Service {
                     System.out.println(employeeService.getEmployees().get(i).toString());
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Employee by Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -226,9 +256,15 @@ public class Service {
                 }
 
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Employee" , timeStamp);
                 Employee employee = employeeService.readEmployee();
                 employeeService.addEmployees(employee);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Employee" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -248,12 +284,16 @@ public class Service {
                 }
                 if(ok){
                     Employee employee = employeeService.readEmployee();
+                    employee.setId(index);
                     employeeService.updateEmployee(index, employee);
                 } else {
                     System.out.println("No employee with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Employee" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -327,6 +367,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Keyloggers" , timeStamp);
                 if(keyloggerService.getKeyloggers().size() == 0){
                     System.out.println("No keyloggers");
                 }
@@ -334,6 +377,9 @@ public class Service {
                     System.out.println(keyloggerService.getKeyloggers().get(i).toString());
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Keylogger By Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -355,9 +401,15 @@ public class Service {
                 }
 
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Keylogger" , timeStamp);
                 Keylogger keylogger = keyloggerService.readKeylogger();
                 keyloggerService.addKeylogger(keylogger);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Keylogger By Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -365,9 +417,24 @@ public class Service {
                     System.out.println("Provide valid id");
                     index = scanner.nextInt();
                 }
-                Keylogger keylogger = keyloggerService.readKeylogger();
-                keyloggerService.updateKeylogger(index, keylogger);
+                if(keyloggerService.getKeyloggers().size() == 0){
+                    System.out.println("No keyloggers");
+                }
+                boolean ok = false;
+                for (int i = 0; i < keyloggerService.getKeyloggers().size(); ++i) {
+                    if(keyloggerService.getKeyloggers().get(i).getId() == index){
+                        ok = true;
+                    }
+                }
+                if(ok){
+                    Keylogger keylogger = keyloggerService.readKeylogger();
+                    keylogger.setId(index);
+                    keyloggerService.updateKeylogger(index, keylogger);
+                }
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Keylogger By Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -375,7 +442,19 @@ public class Service {
                     System.out.println("Provide valid id");
                     index = scanner.nextInt();
                 }
-                keyloggerService.deleteKeyloggerById(index);
+                if(keyloggerService.getKeyloggers().size() == 0){
+                    System.out.println("No keyloggers");
+                }
+                boolean ok = false;
+                for (int i = 0; i < keyloggerService.getKeyloggers().size(); ++i) {
+                    if(keyloggerService.getKeyloggers().get(i).getId() == index){
+                        ok = true;
+                    }
+                }
+                if(ok){
+                    keyloggerService.deleteKeyloggerById(index);
+                }
+
             } else if (option == 5) {
                 break;
             }
@@ -394,13 +473,19 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Kernel-Keyloggers" , timeStamp);
                 if(kernelKeyloggerService.getKernelKeyloggers().size() == 0){
                     System.out.println("No kernelkeyloggers");
                 }
                 for (int i = 0; i < kernelKeyloggerService.getKernelKeyloggers().size(); ++i) {
                     System.out.println(kernelKeyloggerService.getKernelKeyloggers().get(i).toString());
                 }
-            } else if (option == 1) {
+            } else if (option == 1) {SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Kernel-Keylogger By Id" , timeStamp);
+
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -424,9 +509,15 @@ public class Service {
                     System.out.println("No kernel keylogger with this id");
                 }
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Kernel-Keylogger" , timeStamp);
                 KernelKeylogger kernelKeylogger = kernelKeyloggerService.readKernelkeylogger();
                 kernelKeyloggerService.addKernelKeylogger(kernelKeylogger);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Kernel-Keylogger" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -446,12 +537,16 @@ public class Service {
                 }
                 if(ok){
                     KernelKeylogger kernelKeylogger = kernelKeyloggerService.readKernelkeylogger();
+                    kernelKeylogger.setId(index);
                     kernelKeyloggerService.updateKernelKeylogger(index, kernelKeylogger);
                 } else {
                     System.out.println("No kernel keylogger with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Kernel-Keylogger" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -493,6 +588,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Ransomewares" , timeStamp);
                 if(ransomewareService.getRansomewares().size() == 0){
                     System.out.println("No ransomewares");
                 }
@@ -500,6 +598,9 @@ public class Service {
                     System.out.println(ransomewareService.getRansomewares().get(i).toString());
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Ransomeware By Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -523,9 +624,15 @@ public class Service {
                     System.out.println("No ransomeware with this id");
                 }
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Ransomeware" , timeStamp);
                 Ransomeware ransomeware = ransomewareService.readRansomeware();
                 ransomewareService.addRansomeware(ransomeware);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Ransomeware" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -545,12 +652,16 @@ public class Service {
                 }
                 if(ok){
                     Ransomeware ransomeware = ransomewareService.readRansomeware();
+                    ransomeware.setId(index);
                     ransomewareService.updateRansomeware(index, ransomeware);
                 } else {
                     System.out.println("No ransomeware with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Ransomeware" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -592,6 +703,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Rootkits" , timeStamp);
                 if(rootkitService.getRootkits().size() == 0){
                     System.out.println("No rootkits");
                 }
@@ -599,6 +713,9 @@ public class Service {
                     System.out.println(rootkitService.getRootkits().get(i).toString());
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Rootkit By Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -622,9 +739,15 @@ public class Service {
                 }
 
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Rootkit" , timeStamp);
                 Rootkit rootkit = rootkitService.readRootkit();
                 rootkitService.addRootkit(rootkit);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Rootkit" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -643,12 +766,16 @@ public class Service {
                 }
                 if(ok){
                     Rootkit rootkit = rootkitService.readRootkit();
+                    rootkit.setId(index);
                     rootkitService.updateRootkit(index, rootkit);
                 } else {
                     System.out.println("No rootkit with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Rootkit" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -680,6 +807,7 @@ public class Service {
         while(true) {
             printOptions();
             System.out.println(" 6 - Calculate total infection rating by id");
+            System.out.println(" 7 - Calculate total Taxes for customer by id");
             int option;
             try {
                 option = scanner.nextInt();
@@ -689,6 +817,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Computers" , timeStamp);
                 if(computerService.getComputers().size() == 0){
                     System.out.println("No computers");
                 }
@@ -730,6 +861,9 @@ public class Service {
                     }
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Computer By Id" , timeStamp);
                 int index;
                 try {
                      index = scanner.nextInt();
@@ -787,9 +921,15 @@ public class Service {
                 }
 
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Computer" , timeStamp);
                 Computer computer = computerService.readComputer();
                 computerService.addComputer(computer);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Computer" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -809,12 +949,16 @@ public class Service {
                 }
                 if(ok){
                     Computer computer = computerService.readComputer();
+                    computer.setId(index);
                     computerService.updateComputer(index, computer);
                 } else {
                     System.out.println("No computer with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Computer By Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -840,6 +984,9 @@ public class Service {
             } else if (option == 5) {
                 break;
             } else if(option == 6){
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Total Infection Rating for a Computer by Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -862,6 +1009,34 @@ public class Service {
                 if(ok){
                     double rating = computerService.calculateTotalRating(computer);
                     System.out.println("Total infection rating for this computer is: " + rating);
+                } else {
+                    System.out.println("No computer with this id");
+                }
+            } else if(option == 7){
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print total Taxes for customers b by id" , timeStamp);
+                int index;
+                try {
+                    index = scanner.nextInt();
+                } catch (Exception e){
+                    System.out.println("Provide valid id");
+                    index = scanner.nextInt();
+                }
+                if(computerService.getComputers().size() == 0){
+                    System.out.println("No computers");
+                }
+                boolean ok = false;
+                Computer computer = null;
+                for (int i = 0; i < computerService.getComputers().size(); ++i){
+                    if(computerService.getComputers().get(i).getId() == index){
+                        computer = computerService.getComputers().get(i);
+                        ok = true;
+                        break;
+                    }
+                }
+                if(ok){
+                    computerService.calculateTotalTaxesById(index);
                 } else {
                     System.out.println("No computer with this id");
                 }
@@ -900,6 +1075,9 @@ public class Service {
                 option = scanner.nextInt();
             }
             if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Companies by Id" , timeStamp);
                 if(companyService.getCompanies().size() ==  0){
                     System.out.println("No companies");
                 }
@@ -945,6 +1123,9 @@ public class Service {
 
                 }
             } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Company by Id" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -1004,9 +1185,15 @@ public class Service {
                 }
 
             } else if (option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Add Company" , timeStamp);
                 Company company = companyService.readCompany();
                 companyService.addCompanies(company);
             } else if (option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Company" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -1026,12 +1213,16 @@ public class Service {
                 }
                 if(ok){
                     Company company = companyService.readCompany();
+                    company.setId(index);
                     companyService.updateCompany(index, company);
                 } else {
                     System.out.println("No company with this id");
                 }
 
             } else if (option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Company" , timeStamp);
                 int index;
                 try {
                     index = scanner.nextInt();
@@ -1060,7 +1251,7 @@ public class Service {
         }
     }
 
-    public void menu() throws ParseException {
+    public void menu() throws ParseException, IOException {
         while(true){
             printMenu();
             int option;

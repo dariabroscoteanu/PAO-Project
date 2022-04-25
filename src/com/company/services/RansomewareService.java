@@ -87,21 +87,23 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
 
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - Ransomeware.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Ransomeware.csv";
         return path;
     }
 
     public Ransomeware readRansomeware() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         Ransomeware ransomeware = new Ransomeware();
-        System.out.println("Id");
-        try {
-            ransomeware.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            ransomeware.setId(scanner.nextInt());
-        }
+//        System.out.println("Id");
+//        try {
+//            ransomeware.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Provide int");
+//            ransomeware.setId(scanner.nextInt());
+//        }
 
+        int id = getMaxId() + 1;
+        ransomeware.setId(id);
 
         System.out.println("Name");
         ransomeware.setName(scanner.nextLine());
@@ -128,6 +130,7 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -174,7 +177,7 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
     public List<Ransomeware> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "resources/CSV PAO Daria - Ransomeware _Extra.csv";
+        String extraFileName = "src/com/company/resources/CSV PAO Daria - Ransomeware _Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -294,6 +297,16 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
 
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < ransomewares.size(); ++i){
+            if(ransomewares.get(i).getId() > max){
+                max = ransomewares.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     public String getAntet(){
         return "";
     }
@@ -325,7 +338,7 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        String fileName1 = "resources/CSV PAO Daria - Ransomeware _Extra.csv";
+        String fileName1 = "src/com/company/resources/CSV PAO Daria - Ransomeware _Extra.csv";
         File file1 = new File(fileName1);
 
         try{

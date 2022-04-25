@@ -80,15 +80,16 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
         AddressService addressService = AddressService.getInstance();
         ComputerService computerService = ComputerService.getInstance();
         Company company = new Company();
-        System.out.println("Id");
-
-        try {
-            company.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            company.setId(scanner.nextInt());
-        }
-
+//        System.out.println("Id");
+//
+//        try {
+//            company.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Enter a number");
+//            company.setId(scanner.nextInt());
+//        }
+        int id = getMaxId() + 1;
+        company.setId(id);
 
         System.out.println("Name");
         company.setName(scanner.nextLine());
@@ -120,9 +121,13 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
         return company;
     }
 
+    public void printMostDangerousMalware(){
+
+    }
+
     @Override
     public String getFileName(){
-        String path = "resources/CSV PAO Daria - Company.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Company.csv";
         return path;
     }
 
@@ -133,14 +138,30 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
 
     @Override
     public String convertObjectToString(Company object) {
-        String line = object.getId() + separator + object.getName() + separator + object.getAddress().getId() + "\n";
+        String res;
+        if(object.getAddress().getId() == -1){
+            res = "null";
+        } else {
+            res = String.valueOf(object.getAddress().getId());
+        }
+        String line = object.getId() + separator + object.getName() + separator + res + "\n";
         return line;
+    }
+
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < companies.size(); ++i){
+            if(companies.get(i).getId() > max){
+                max = companies.get(i).getId();
+            }
+        }
+        return max;
     }
 
     public List<Company> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "resources/CSV PAO Daria - Company_Computer.csv";
+        String extraFileName = "src/com/company/resources/CSV PAO Daria - Company_Computer.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -176,6 +197,9 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
                         }
                         String[] fields = line.split(separator);
                         int id = Integer.parseInt(fields[0]);
+                        if(Objects.equals(fields[1], "null")){
+                            fields[1] = "-1";
+                        }
                         int computerId = Integer.parseInt(fields[1]);
                         Company company = resultLines.stream()
                                 .filter(r -> r.getId() == id)
@@ -259,21 +283,35 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
     public Company processLine(String line) throws ParseException {
         String[] fields = line.split(separator);
         int id = 0;
-        try{
-            id = Integer.parseInt(fields[0]);
-        } catch (Exception e){
-            System.out.println("The id must be an int");
+        if(Objects.equals(fields[0], "null")){
+            id = getMaxId();
+        } else {
+            try {
+                id = Integer.parseInt(fields[0]);
+            } catch (Exception e) {
+                System.out.println("The id must be an int");
+            }
         }
+
         String name = fields[1];
-        int addressId = Integer.parseInt(fields[2]);
+
         //System.out.println(addressId);
         AddressService addressService = AddressService.getInstance();
+        int addressId;
         Address address = new Address();
+        if(Objects.equals(fields[2], "null")){
+            fields[2] = "-1";
+        }
+
+        addressId = Integer.parseInt(fields[2]);
+
+        address = new Address();
         try{
             address = addressService.getAddressById(addressId);
         } catch (Exception e){
             System.out.println("The address doesnt exist");
         }
+
         return new Company(id, name, address, new ArrayList<>());
 
     }
@@ -309,7 +347,7 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "resources/CSV PAO Daria - Company_Computer.csv";
+        fileName = "src/com/company/resources/CSV PAO Daria - Company_Computer.csv";
         file = new File(fileName);
 
         try{

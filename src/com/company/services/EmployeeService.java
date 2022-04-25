@@ -78,13 +78,16 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
         Scanner scanner = new Scanner(System.in);
         AddressService addressService = AddressService.getInstance();
         Employee employee = new Employee();
-        System.out.println("Id");
-        try {
-            employee.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            employee.setId(scanner.nextInt());
-        }
+//        System.out.println("Id");
+//        try {
+//            employee.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Provide int");
+//            employee.setId(scanner.nextInt());
+//        }
+
+        int id = getMaxId() + 1;
+        employee.setId(id);
 
         System.out.println("Name");
         employee.setName(scanner.nextLine());
@@ -111,9 +114,19 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
         return employee;
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < employees.size(); ++i){
+            if(employees.get(i).getId() > max){
+                max = employees.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - Employee.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Employee.csv";
         return path;
     }
 
@@ -124,7 +137,13 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
 
     @Override
     public String convertObjectToString(Employee object) {
-        String line = object.getId() + separator + object.getName() + separator + object.getEmail() + separator + object.getPosition() + separator + object.getSalary() + separator + object.getAddress().getId() +  "\n";
+        String res;
+        if(object.getAddress().getId() == -1){
+            res = "null";
+        } else {
+            res = String.valueOf(object.getAddress().getId());
+        }
+        String line = object.getId() + separator + object.getName() + separator + object.getEmail() + separator + object.getPosition() + separator + object.getSalary() + separator + res +  "\n";
         return line;
     }
 
@@ -151,10 +170,14 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
         } catch (Exception e){
             System.out.println("The salary must be a double");
         }
+        if(fields[5].equals("null")){
+            fields[5] = "-1";
+        }
         int addressId = Integer.parseInt(fields[5]);
         //System.out.println(addressId);
         AddressService addressService = AddressService.getInstance();
         Address address = new Address();
+        address.setId(-1);
         try{
             address = addressService.getAddressById(addressId);
         } catch (Exception e){

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, IOException {
         Service service = Service.getInstance();
         service.menu();
     }

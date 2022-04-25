@@ -98,13 +98,16 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
     public Keylogger readKeylogger() throws ParseException {
         Scanner scanner = new Scanner(System.in);
         Keylogger keylogger = new Keylogger();
-        System.out.println("Id");
-        try {
-            keylogger.setId(scanner.nextInt());
-        } catch (Exception e){
-            System.out.println("Provide int");
-            keylogger.setId(scanner.nextInt());
-        }
+//        System.out.println("Id");
+//        try {
+//            keylogger.setId(scanner.nextInt());
+//        } catch (Exception e){
+//            System.out.println("Provide int");
+//            keylogger.setId(scanner.nextInt());
+//        }
+
+        int id = getMaxId() + 1;
+        keylogger.setId(id);
 
         System.out.println("Name");
         keylogger.setName(scanner.nextLine());
@@ -131,6 +134,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -146,6 +150,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Used Functions");
         ArrayList<String> arr1 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -161,6 +166,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
             System.out.println("Enter a number");
             nr = scanner.nextInt();
         }
+        scanner.nextLine();
         System.out.println("Used keys");
         ArrayList<String> arr2 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -197,7 +203,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
 
     @Override
     public String getFileName() {
-        String path = "resources/CSV PAO Daria - Keylogger.csv";
+        String path = "src/com/company/resources/CSV PAO Daria - Keylogger.csv";
         return path;
     }
 
@@ -217,7 +223,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
     public List<Keylogger> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "resources/CSV PAO Daria - Keylogger_Extra.csv";
+        String extraFileName = "src/com/company/resources/CSV PAO Daria - Keylogger_Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -326,6 +332,16 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
         }
     }
 
+    public int getMaxId(){
+        int max = 0;
+        for(int i = 0; i < keyloggers.size(); ++i){
+            if(keyloggers.get(i).getId() > max){
+                max = keyloggers.get(i).getId();
+            }
+        }
+        return max;
+    }
+
     public void write(List<Keylogger> objects){
         String fileName = this.getFileName();
         File file = new File(fileName);
@@ -353,7 +369,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "resources/CSV PAO Daria - Keylogger_Extra.csv";
+        fileName = "src/com/company/resources/CSV PAO Daria - Keylogger_Extra.csv";
         file = new File(fileName);
 
         try{
@@ -377,21 +393,21 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
                             CSVline += reg.get(0) + separator;
                             reg.remove(0);
                         } else {
-                            CSVline += "" + separator;
+                            CSVline += "null" + separator;
                         }
 
                         if(func.size() > 0){
                             CSVline += func.get(0) + separator;
                             func.remove(0);
                         } else {
-                            CSVline += "" + separator;
+                            CSVline += "null" + separator;
                         }
 
                         if(keys.size() > 0){
                             CSVline += keys.get(0);
                             keys.remove(0);
                         } else {
-                            CSVline += "";
+                            CSVline += "null";
                         }
                         try{
                             CSVline +=  "\n";

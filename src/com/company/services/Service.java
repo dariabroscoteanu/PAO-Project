@@ -1066,6 +1066,7 @@ public class Service {
     public void companyMenu() throws ParseException {
         while(true) {
             printOptions();
+            System.out.println(" 6 - Print top 3 most infected computers for a specific company");
             int option;
             try {
                 option = scanner.nextInt();
@@ -1247,6 +1248,33 @@ public class Service {
                 }
             } else if (option == 5) {
                 break;
+            } else if(option == 6){
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Print Top 3 Most Infected Computers" , timeStamp);
+                int index;
+                try {
+                    index = scanner.nextInt();
+                } catch (Exception e){
+                    System.out.println("Provide valid id");
+                    index = scanner.nextInt();
+                }
+                if(companyService.getCompanies().size() ==  0){
+                    System.out.println("No companies");
+                }
+                boolean ok = false;
+                for (int i = 0; i < companyService.getCompanies().size(); ++i){
+                    if(companyService.getCompanies().get(i).getId() == index){
+                        ok = true;
+                        break;
+                    }
+                }
+                if(ok){
+                    companyService.printTop3MostInfectedComputers(index);
+                } else {
+                    System.out.println("No company with this id");
+                }
+
             }
         }
     }

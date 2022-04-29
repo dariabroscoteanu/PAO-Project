@@ -11,6 +11,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CompanyService implements CompanyInterface, CSVReaderWriter<Company>{
     private List<Company> companies = new ArrayList<>();
@@ -156,6 +157,42 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
             }
         }
         return max;
+    }
+
+    public void printTop3MostInfectedComputers(int index){
+        if(companies.size() == 0){
+            System.out.println("No companies");
+        }
+        boolean ok = false;
+        Company company = null;
+        for (int i = 0; i < companies.size(); ++i){
+            if(companies.get(i).getId() == index){
+                company = companies.get(i);
+                ok = true;
+                break;
+            }
+        }
+        if(ok){
+            Map <Integer, Double> hm = new HashMap<Integer, Double>();
+            if(company.getComputers() != null){
+                ComputerService computerService = ComputerService.getInstance();
+                for(Computer computer : company.getComputers()){
+                    hm.put(computer.getId(), computerService.getComputerById(computer.getId()).getTotalRating());
+                }
+                List<Integer> keys = hm.entrySet().stream()
+                        .sorted(Map.Entry.<Integer, Double>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).collect(Collectors.toList());
+                if(keys.size() != 0) {
+                    System.out.println("Top infected computers");
+                    System.out.println("------------------------------------------------");
+                    keys.stream()
+                            .forEach(key -> System.out.println(computerService.getComputerById(key)));
+
+                }
+            }
+        } else {
+            System.out.println("No company with this id");
+        }
+
     }
 
     public List<Company> read() {

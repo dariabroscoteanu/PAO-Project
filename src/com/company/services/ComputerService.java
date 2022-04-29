@@ -339,8 +339,8 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                     int computerId = Integer.parseInt(fields.get(0));
                     int rootkitId = Integer.parseInt(fields.get(1));
                     int keyloggerId = Integer.parseInt(fields.get(2));
-                    int kernelKeyloggerId = Integer.parseInt(fields.get(2));
-                    int ransomewareId = Integer.parseInt(fields.get(2));
+                    int kernelKeyloggerId = Integer.parseInt(fields.get(3));
+                    int ransomewareId = Integer.parseInt(fields.get(4));
                     RootkitService rootkitService = RootkitService.getInstance();
                     KeyloggerService keyloggerService = KeyloggerService.getInstance();
                     RansomewareService ransomewareService = RansomewareService.getInstance();

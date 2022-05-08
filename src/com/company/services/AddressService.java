@@ -4,7 +4,7 @@ import com.company.entities.Address;
 
 import java.util.*;
 
-public class AddressService implements AddressInterface, CSVReaderWriter<Address> {
+public class AddressService implements AddressInterface, CSVReader<Address>, CSVWriter<Address> {
     private List<Address> addresses = new ArrayList<>();
     private static AddressService instance;
 
@@ -93,7 +93,8 @@ public class AddressService implements AddressInterface, CSVReaderWriter<Address
 
     @Override
     public String convertObjectToString(Address object) {
-        String line = object.getId() + separator + object.getStreet() + separator + object.getCity() + separator + object.getCountry() + separator + object.getAddressLine() + "\n";
+        String line = object.getId() + CSVWriter.separator + object.getStreet() + CSVWriter.separator
+                + object.getCity() + CSVWriter.separator + object.getCountry() + CSVWriter.separator + object.getAddressLine() + "\n";
         return line;
     }
 
@@ -109,7 +110,7 @@ public class AddressService implements AddressInterface, CSVReaderWriter<Address
 
     @Override
     public Address processLine(String line){
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         int id = 0;
         if(Objects.equals(fields[0], "null")){
             id = getMaxId();

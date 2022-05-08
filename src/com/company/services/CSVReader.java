@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public interface CSVReaderWriter<T>{
+public interface CSVReader<T>{
     public String separator = ",";
 
     public String getAntet();
@@ -64,41 +64,41 @@ public interface CSVReaderWriter<T>{
         }
     }
 
-    default void write(List<T> objects){
-        String fileName = this.getFileName();
-        File file = new File(fileName);
-
-        try{
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            try{
-                String CSVline = getAntet();
-                bufferedWriter.write(CSVline);
-            } catch (Throwable anything){
-                throw anything;
-            }
-
-            if(objects != null){
-                for(T object : objects){
-                    try{
-                        String CSVline = this.convertObjectToString(object);
-                        //System.out.println(CSVline);
-                        bufferedWriter.write(CSVline);
-                    } catch (Throwable anything){
-
-                        throw anything;
-                    }
-                }
-                try {
-                    bufferedWriter.close();
-                } catch (Throwable something) {
-                    throw something;
-                }
-
-            }
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
+//    default void write(List<T> objects){
+//        String fileName = this.getFileName();
+//        File file = new File(fileName);
+//
+//        try{
+//            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+//            try{
+//                String CSVline = getAntet();
+//                bufferedWriter.write(CSVline);
+//            } catch (Throwable anything){
+//                throw anything;
+//            }
+//
+//            if(objects != null){
+//                for(T object : objects){
+//                    try{
+//                        String CSVline = this.convertObjectToString(object);
+//                        //System.out.println(CSVline);
+//                        bufferedWriter.write(CSVline);
+//                    } catch (Throwable anything){
+//
+//                        throw anything;
+//                    }
+//                }
+//                try {
+//                    bufferedWriter.close();
+//                } catch (Throwable something) {
+//                    throw something;
+//                }
+//
+//            }
+//
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//    }
 
 }

@@ -1,6 +1,5 @@
 package com.company.services;
 
-import com.company.entities.KernelKeylogger;
 import com.company.entities.Keylogger;
 
 import java.io.*;
@@ -8,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Keylogger>{
+public class KeyloggerService implements KeyloggerInterface, CSVReader<Keylogger>, CSVWriter<Keylogger> {
     private List<Keylogger> keyloggers = new ArrayList<>();
     private static KeyloggerService instance;
 
@@ -113,28 +112,33 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
         keylogger.setName(scanner.nextLine());
 
         System.out.println("Creation Date - dd/mm/yyyy");
-        String date;
-        try {
-            date = scanner.nextLine();
-        } catch (Exception e){
-            System.out.println("Provide date in format - dd/mm/yyyy");
-            date = scanner.nextLine();
+        Date date1;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                date1 = new SimpleDateFormat("dd/MM/yyyy").parse(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Provide date in format - dd/mm/yyyy");
+            }
         }
-        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
         keylogger.setCreationDate(date1);
 
         System.out.println("Infection Method");
         keylogger.setInfectionMethod(scanner.nextLine());
 
         System.out.println("Number of modified registers");
-        int nr;
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -144,15 +148,19 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
         keylogger.setModifiedRegisters(arr);
 
         System.out.println("Number of used functions");
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        //int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Used Functions");
-        ArrayList<String> arr1 = new ArrayList<>();
+        List<String> arr1 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
             String str = scanner.nextLine();
             arr1.add(str);
@@ -160,15 +168,19 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
         keylogger.setUsedFunctions(arr1);
 
         System.out.println("Number of used keys");
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        //int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Used keys");
-        ArrayList<String> arr2 = new ArrayList<>();
+        List<String> arr2 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
             String str = scanner.nextLine();
             arr2.add(str);
@@ -185,7 +197,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
 
     @Override
     public Keylogger processLine(String line) throws ParseException {
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         //System.out.println(line);
         int id = 0;
         try{
@@ -211,7 +223,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
     public String convertObjectToString(Keylogger object) {
         Date date = object.getCreationDate();
         String dateString = new SimpleDateFormat("dd/MM/yyyy").format(date);
-        String line = object.getId() + separator + object.getName() + separator + dateString + separator + object.getInfectionMethod() + "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + dateString + CSVWriter.separator + object.getInfectionMethod() + "\n";
         return line;
     }
 
@@ -252,7 +264,7 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
                         if (line == null) {
                             break;
                         }
-                        String[] fields = line.split(separator);
+                        String[] fields = line.split(CSVWriter.separator);
                         int id = Integer.parseInt(fields[0]);
                         Keylogger keylogger = resultLines.stream()
                                 .filter(r -> r.getId() == id)
@@ -388,19 +400,19 @@ public class KeyloggerService implements KeyloggerInterface, CSVReaderWriter<Key
                     int nr = Integer.max(reg.size(), func.size());
                     nr = Integer.max(nr, keys.size());
                     while(nr > 0){
-                        String CSVline = object.getId() + separator;
+                        String CSVline = object.getId() + CSVWriter.separator;
                         if(reg.size() > 0){
-                            CSVline += reg.get(0) + separator;
+                            CSVline += reg.get(0) + CSVWriter.separator;
                             reg.remove(0);
                         } else {
-                            CSVline += "null" + separator;
+                            CSVline += "null" + CSVWriter.separator;
                         }
 
                         if(func.size() > 0){
-                            CSVline += func.get(0) + separator;
+                            CSVline += func.get(0) + CSVWriter.separator;
                             func.remove(0);
                         } else {
-                            CSVline += "null" + separator;
+                            CSVline += "null" + CSVWriter.separator;
                         }
 
                         if(keys.size() > 0){

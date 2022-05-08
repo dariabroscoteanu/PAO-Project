@@ -5,15 +5,13 @@ package com.company.services;
 import com.company.entities.Computer;
 import com.company.entities.Company;
 import com.company.entities.Address;
-import com.company.entities.Ransomeware;
 
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CompanyService implements CompanyInterface, CSVReaderWriter<Company>{
+public class CompanyService implements CompanyInterface, CSVReader<Company>, CSVWriter<Company>{
     private List<Company> companies = new ArrayList<>();
     private static CompanyService instance;
 
@@ -103,14 +101,18 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
         //scanner.nextLine();
         System.out.println("Number of Computers");
         int nr ;
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
+
         System.out.println("Computers");
-        ArrayList arr = new ArrayList<>();
+        List<Computer> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
             Computer computer = computerService.readComputer();
             computerService.addComputer(computer);
@@ -145,7 +147,7 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
         } else {
             res = String.valueOf(object.getAddress().getId());
         }
-        String line = object.getId() + separator + object.getName() + separator + res + "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + res + "\n";
         return line;
     }
 
@@ -232,7 +234,7 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
                         if (line == null) {
                             break;
                         }
-                        String[] fields = line.split(separator);
+                        String[] fields = line.split(CSVWriter.separator);
                         int id = Integer.parseInt(fields[0]);
                         if(Objects.equals(fields[1], "null")){
                             fields[1] = "-1";
@@ -318,7 +320,7 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
 
     @Override
     public Company processLine(String line) throws ParseException {
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         int id = 0;
         if(Objects.equals(fields[0], "null")){
             id = getMaxId();
@@ -399,7 +401,7 @@ public class CompanyService implements CompanyInterface, CSVReaderWriter<Company
                 for(Company object : objects){
                     for(Computer computer : object.getComputers()) {
                         try{
-                            String CSVline = object.getId() + separator + computer.getId() + "\n";
+                            String CSVline = object.getId() + CSVWriter.separator + computer.getId() + "\n";
                             bufferedWriter.write(CSVline);
                         } catch (Throwable anything){
                             throw anything;

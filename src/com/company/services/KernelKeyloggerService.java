@@ -1,15 +1,13 @@
 package com.company.services;
 
 import com.company.entities.KernelKeylogger;
-import com.company.entities.Ransomeware;
 
 import java.io.*;
-import java.net.Inet4Address;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVReaderWriter<KernelKeylogger> {
+public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVReader<KernelKeylogger>, CSVWriter<KernelKeylogger> {
     private List<KernelKeylogger> kernelKeyloggers = new ArrayList<>();
     private static KernelKeyloggerService instance;
 
@@ -120,28 +118,41 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         kernelKeylogger.setName(scanner.nextLine());
 
         System.out.println("Creation Date - dd/mm/yyyy");
-        String date;
-        try {
-            date = scanner.nextLine();
-        } catch (Exception e){
-            System.out.println("Provide date in format - dd/mm/yyyy");
-            date = scanner.nextLine();
+        //String date;
+        Date date1;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                date1 = new SimpleDateFormat("dd/MM/yyyy").parse(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Provide date in format - dd/mm/yyyy");
+            }
         }
-        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+//        try {
+//            date = scanner.nextLine();
+//        } catch (Exception e){
+//            System.out.println("Provide date in format - dd/mm/yyyy");
+//            date = scanner.nextLine();
+//        }
+//        Date;
         kernelKeylogger.setCreationDate(date1);
 
         System.out.println("Infection Method");
         kernelKeylogger.setInfectionMethod(scanner.nextLine());
 
         System.out.println("Number of modified registers");
-        int nr;
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -151,15 +162,19 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         kernelKeylogger.setModifiedRegisters(arr);
 
         System.out.println("Number of used functions");
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+//        int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Used Functions");
-        ArrayList<String> arr1 = new ArrayList<>();
+        List<String> arr1 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
             String str = scanner.nextLine();
             arr1.add(str);
@@ -167,35 +182,53 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         kernelKeylogger.setUsedFunctions(arr1);
 
         System.out.println("Number of used keys");
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+//        int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Used keys");
-        ArrayList<String> arr2 = new ArrayList<>();
+        List<String> arr2 = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
             String str = scanner.nextLine();
             arr2.add(str);
         }
         kernelKeylogger.setUsedKeys(arr2);
         System.out.println("Is hiding files?");
-        try {
-            kernelKeylogger.setHidingFiles(scanner.nextBoolean());
-        } catch (Exception e){
-            System.out.println("Enter a boolean");
-            kernelKeylogger.setHidingFiles(scanner.nextBoolean());
+        boolean  ok;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                ok = Boolean.parseBoolean(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-
+        kernelKeylogger.setHidingFiles(ok);
         System.out.println("Is hiding records?");
-        try {
-            kernelKeylogger.setHidingRecords(scanner.nextBoolean());
-        } catch (Exception e){
-            System.out.println("Enter a boolean");
-            kernelKeylogger.setHidingRecords(scanner.nextBoolean());
-        }
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                ok = Boolean.parseBoolean(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
+        }kernelKeylogger.setHidingRecords(ok);
+
+//        try {
+//            kernelKeylogger.setHidingRecords(scanner.nextBoolean());
+//        } catch (Exception e){
+//            System.out.println("Enter a boolean");
+//            kernelKeylogger.setHidingRecords(scanner.nextBoolean());
+//        }
 
         findRating(kernelKeylogger);
         return kernelKeylogger;
@@ -209,7 +242,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
 
     @Override
     public KernelKeylogger processLine(String line) throws ParseException {
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         int id = 0;
         try{
             id = Integer.parseInt(fields[0]);
@@ -252,7 +285,8 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         }
         Date date = object.getCreationDate();
         String dateString = new SimpleDateFormat("dd/MM/yyyy").format(date);
-        String line = object.getId() + separator + object.getName() + separator + dateString + separator + object.getInfectionMethod() + separator + ok1 + separator + ok2+  "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + dateString
+                + CSVWriter.separator + object.getInfectionMethod() + CSVWriter.separator + ok1 + CSVWriter.separator + ok2+  "\n";
         return line;
     }
 
@@ -293,7 +327,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                         if (line == null) {
                             break;
                         }
-                        String[] fields = line.split(separator);
+                        String[] fields = line.split(CSVWriter.separator);
                         int id = Integer.parseInt(fields[0]);
                         KernelKeylogger kernelKeylogger = resultLines.stream()
                                 .filter(r -> r.getId() == id)
@@ -429,19 +463,19 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                     int nr = Integer.max(reg.size(), func.size());
                     nr = Integer.max(nr, keys.size());
                     while(nr > 0){
-                        String CSVline = object.getId() + separator;
+                        String CSVline = object.getId() + CSVWriter.separator;
                         if(reg.size() > 0){
-                            CSVline += reg.get(0) + separator;
+                            CSVline += reg.get(0) + CSVWriter.separator;
                             reg.remove(0);
                         } else {
-                            CSVline += "null" + separator;
+                            CSVline += "null" + CSVWriter.separator;
                         }
 
                         if(func.size() > 0){
-                            CSVline += func.get(0) + separator;
+                            CSVline += func.get(0) + CSVWriter.separator;
                             func.remove(0);
                         } else {
-                            CSVline += "null" + separator;
+                            CSVline += "null" + CSVWriter.separator;
                         }
 
                         if(keys.size() > 0){

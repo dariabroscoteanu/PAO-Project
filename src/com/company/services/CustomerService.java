@@ -4,13 +4,12 @@ package com.company.services;
 
 import com.company.entities.Address;
 import com.company.entities.Customer;
-import com.company.entities.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CustomerService implements CustomerInterface, CSVReaderWriter<Customer>{
+public class CustomerService implements CustomerInterface, CSVReader<Customer>, CSVWriter<Customer>{
     private List<Customer> customers = new ArrayList<>();
     private static CustomerService instance;
 
@@ -102,11 +101,15 @@ public class CustomerService implements CustomerInterface, CSVReaderWriter<Custo
         customer.setUsage(scanner.nextLine());
 
         System.out.println("Taxes");
-        try {
-            customer.setTaxes(scanner.nextDouble());
-        } catch (Exception e){
-            System.out.println("Provide double");
-            customer.setTaxes(scanner.nextDouble());
+        double taxes;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                taxes = Double.parseDouble(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a double");
+            }
         }
         return customer;
     }
@@ -134,7 +137,7 @@ public class CustomerService implements CustomerInterface, CSVReaderWriter<Custo
 
     @Override
     public String convertObjectToString(Customer object) {
-        String line = object.getId() + separator + object.getName() + separator + object.getEmail() + separator + object.getUsage() + separator + object.getTaxes() + separator + object.getAddress().getId() +  "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + object.getEmail() + CSVWriter.separator + object.getUsage() + CSVWriter.separator + object.getTaxes() + CSVWriter.separator + object.getAddress().getId() +  "\n";
         return line;
     }
 
@@ -145,7 +148,7 @@ public class CustomerService implements CustomerInterface, CSVReaderWriter<Custo
 
     @Override
     public Customer processLine(String line){
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         int id = 0;
         try{
             id = Integer.parseInt(fields[0]);

@@ -72,12 +72,18 @@ public class Service {
         while(true){
             printUserMenu();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 2");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=2) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 2");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 2");
+                }
             }
             if (option == 0) {
                 employeeMenu();
@@ -94,12 +100,18 @@ public class Service {
         while(true) {
             printOptions();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 5");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 5");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -117,11 +129,14 @@ public class Service {
                 auditService.audit("Get Customer By Id" , timeStamp);
 
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(customerService.getCustomers().size() == 0){
                     System.out.println("No customers");
@@ -149,12 +164,16 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Customer" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
+
                 if(customerService.getCustomers().size() == 0){
                     System.out.println("No customers");
                 }
@@ -178,11 +197,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Customer" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(customerService.getCustomers().size() == 0){
                     System.out.println("No customers");
@@ -211,12 +233,18 @@ public class Service {
         while(true) {
             printOptions();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 5");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 5");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -233,11 +261,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Get Employee by Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(employeeService.getEmployees().size() == 0){
                     System.out.println("No employees");
@@ -266,11 +297,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Employee" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(employeeService.getEmployees().size() == 0){
                     System.out.println("No employees");
@@ -295,11 +329,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Employee" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(employeeService.getEmployees().size() == 0){
                     System.out.println("No employees");
@@ -334,12 +371,18 @@ public class Service {
         while(true){
             printMalwareMenu();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 4");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=4) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 4");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 4");
+                }
             }
             if (option == 0) {
                 rootkitMenu();
@@ -359,12 +402,18 @@ public class Service {
         while(true) {
             printOptions();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 5");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 5");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -381,11 +430,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Keylogger By Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(keyloggerService.getKeyloggers().size() == 0){
                     System.out.println("No keyloggers");
@@ -411,11 +463,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Keylogger By Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(keyloggerService.getKeyloggers().size() == 0){
                     System.out.println("No keyloggers");
@@ -436,11 +491,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Keylogger By Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(keyloggerService.getKeyloggers().size() == 0){
                     System.out.println("No keyloggers");
@@ -465,12 +523,18 @@ public class Service {
         while(true) {
             printOptions();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 5");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 5");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -487,11 +551,14 @@ public class Service {
                 auditService.audit("Print Kernel-Keylogger By Id" , timeStamp);
 
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(kernelKeyloggerService.getKernelKeyloggers().size() == 0){
                     System.out.println("No kernelkeyloggers");
@@ -519,11 +586,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Add Kernel-Keylogger" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(kernelKeyloggerService.getKernelKeyloggers().size() == 0){
                     System.out.println("No kernelkeyloggers");
@@ -548,11 +618,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Kernel-Keylogger" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(kernelKeyloggerService.getKernelKeyloggers().size() == 0){
                     System.out.println("No kernelkeyloggers");
@@ -580,12 +653,18 @@ public class Service {
         while(true) {
             printOptions();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 5");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 5");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -602,11 +681,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Ransomeware By Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(ransomewareService.getRansomewares().size() == 0){
                     System.out.println("No ransomewares");
@@ -634,11 +716,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Ransomeware" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(ransomewareService.getRansomewares().size() == 0){
                     System.out.println("No ransomewares");
@@ -663,11 +748,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Ransomeware" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(ransomewareService.getRansomewares().size() == 0){
                     System.out.println("No ransomewares");
@@ -695,12 +783,16 @@ public class Service {
         while(true) {
             printOptions();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=5) {
+                        break;
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 5");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -717,11 +809,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Rootkit By Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(rootkitService.getRootkits().size() == 0){
                     System.out.println("No rootkits");
@@ -749,11 +844,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Rootkit" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(rootkitService.getRootkits().size() == 0){
                     System.out.println("No rootkits");
@@ -777,11 +875,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Rootkit" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(rootkitService.getRootkits().size() == 0){
                     System.out.println("No rootkits");
@@ -809,12 +910,18 @@ public class Service {
             System.out.println(" 6 - Calculate total infection rating by id");
             System.out.println(" 7 - Calculate total Taxes for customer by id");
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 6");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <=7) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 7");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 7");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -865,11 +972,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Computer By Id" , timeStamp);
                 int index;
-                try {
-                     index = scanner.nextInt();
-                } catch (Exception e) {
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 boolean ok = false;
                 for (int i = 0; i < computerService.getComputers().size(); ++i){
@@ -931,11 +1041,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Computer" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(computerService.getComputers().size() == 0){
                     System.out.println("No computers");
@@ -960,11 +1073,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Computer By Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(computerService.getComputers().size() == 0){
                     System.out.println("No computers");
@@ -988,11 +1104,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Total Infection Rating for a Computer by Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(computerService.getComputers().size() == 0){
                     System.out.println("No computers");
@@ -1017,11 +1136,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print total Taxes for customers b by id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(computerService.getComputers().size() == 0){
                     System.out.println("No computers");
@@ -1068,12 +1190,18 @@ public class Service {
             printOptions();
             System.out.println(" 6 - Print top 3 most infected computers for a specific company");
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 0 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 0 && option <= 6) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 6");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 6");
+                }
             }
             if (option == 0) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -1128,11 +1256,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Company by Id" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(companyService.getCompanies().size() ==  0){
                     System.out.println("No companies");
@@ -1196,11 +1327,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Update Company" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(companyService.getCompanies().size() ==  0){
                     System.out.println("No companies");
@@ -1225,11 +1359,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Delete Company" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(companyService.getCompanies().size() ==  0){
                     System.out.println("No companies");
@@ -1253,11 +1390,14 @@ public class Service {
                 String timeStamp = date.format(new Date());
                 auditService.audit("Print Top 3 Most Infected Computers" , timeStamp);
                 int index;
-                try {
-                    index = scanner.nextInt();
-                } catch (Exception e){
-                    System.out.println("Provide valid id");
-                    index = scanner.nextInt();
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a number");
+                    }
                 }
                 if(companyService.getCompanies().size() ==  0){
                     System.out.println("No companies");
@@ -1283,12 +1423,18 @@ public class Service {
         while(true){
             printMenu();
             int option;
-            try {
-                option = scanner.nextInt();
-            }
-            catch(Exception e){
-                System.out.println("Provide an int between 1 and 5");
-                option = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if(option >= 1 && option <=5) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 1 and 5");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 1 and 5");
+                }
             }
             if(option == 1){
                 malwareMenu();

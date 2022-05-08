@@ -2,15 +2,10 @@ package com.company.services;
 
 import com.company.entities.Address;
 import com.company.entities.Employee;
-import com.company.entities.Ransomeware;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
-public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Employee> {
+public class EmployeeService implements EmployeeInterface, CSVReader<Employee>, CSVWriter<Employee> {
     private List<Employee> employees = new ArrayList<>();
     private static EmployeeService instance;
 
@@ -104,11 +99,15 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
         employee.setPosition(scanner.nextLine());
 
         System.out.println("Salary");
-        try {
-            employee.setSalary(scanner.nextDouble());
-        } catch (Exception e){
-            System.out.println("Provide double");
-            employee.setSalary(scanner.nextDouble());
+        double taxes;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                taxes = Double.parseDouble(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a double");
+            }
         }
 
         return employee;
@@ -143,7 +142,9 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
         } else {
             res = String.valueOf(object.getAddress().getId());
         }
-        String line = object.getId() + separator + object.getName() + separator + object.getEmail() + separator + object.getPosition() + separator + object.getSalary() + separator + res +  "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName()
+                + CSVWriter.separator + object.getEmail() + CSVWriter.separator + object.getPosition()
+                + CSVWriter.separator + object.getSalary() + CSVWriter.separator + res +  "\n";
         return line;
     }
 
@@ -154,7 +155,7 @@ public class EmployeeService implements EmployeeInterface, CSVReaderWriter<Emplo
 
     @Override
     public Employee processLine(String line){
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         int id = 0;
         try{
             id = Integer.parseInt(fields[0]);

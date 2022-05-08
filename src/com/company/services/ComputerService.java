@@ -4,13 +4,11 @@ package com.company.services;
 import com.company.entities.*;
 
 import java.io.*;
-import java.security.Key;
 import java.text.ParseException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ComputerService implements ComputerInterface, CSVReaderWriter<Computer> {
+public class ComputerService implements ComputerInterface, CSVReader<Computer>, CSVWriter<Computer> {
     private List<Computer> computers = new ArrayList<>();
     private static ComputerService instance;
 
@@ -119,25 +117,35 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
 
         System.out.println("Number of Malwares");
         int nr;
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
         System.out.println("Malwares");
-        ArrayList arr = new ArrayList<>();
+        List<Malware> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
             System.out.println(" 0 - Rootkit");
             System.out.println(" 1 - Ransomeware");
             System.out.println(" 2 - Keylogger");
             System.out.println(" 3 - Kernel Keylogger");
             int opt;
-            try {
-                opt = scanner.nextInt();
-            } catch (Exception e){
-                System.out.println("Enter a number");
-                opt = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    opt = Integer.parseInt(line);
+                    if(opt >= 0 && opt <=3) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 3");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 3");
+                }
             }
             if(opt == 0) {
                 Rootkit rootkit = rootkitService.readRootkit();
@@ -161,26 +169,36 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
             }
         }
         // TreeSet t = new TreeSet(arr);
-        computer.setMalwares(arr);
+        computer.setMalwares((ArrayList) arr);
 
         System.out.println("Number of Users");
-        ArrayList arr1 = new ArrayList<>();
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        List<User> arr1 = new ArrayList<>();
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
         System.out.println("Users");
         for(int i = 0; i < nr; ++i){
             System.out.println("0 - Costumer");
             System.out.println("1 - Employee");
             int opt;
-            try {
-                opt = scanner.nextInt();
-            } catch (Exception e){
-                System.out.println("Enter a number");
-                opt = scanner.nextInt();
+            while(true){
+                String line = scanner.nextLine();
+                try {
+                    opt = Integer.parseInt(line);
+                    if(opt >= 0 && opt <=1) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 1");
+                    }
+                } catch (Exception e){
+                    System.out.println("Enter a number between 0 and 1");
+                }
             }
             if(opt == 0){
                 Customer customer = customerService.readCustomer();
@@ -193,7 +211,7 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
             }
         }
 //        TreeSet t1 = new TreeSet(arr);
-        computer.setUsers(arr1);
+        computer.setUsers((ArrayList) arr1);
 
         return computer;
     }
@@ -271,7 +289,7 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                         result = resultLines;
                         break;
                     }
-                    List<String> fields = List.of(currentLine.split(separator));
+                    List<String> fields = List.of(currentLine.split(CSVWriter.separator));
                     fields = fields.stream()
                             .map(o -> Objects.equals(o, "null") ? "-1" : o)
                             .collect(Collectors.toList());
@@ -331,7 +349,7 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                         result = resultLines;
                         break;
                     }
-                    List<String> fields = List.of(currentLine1.split(separator));
+                    List<String> fields = List.of(currentLine1.split(CSVWriter.separator));
                     //System.out.println(currentLine1);
                     fields = fields.stream()
                             .map(o -> Objects.equals(o, "null") ? "-1" : o)
@@ -468,26 +486,26 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                         }
                         int nr = Integer.max(Integer.max(rootkits.size(), ransomewares.size()), Integer.max(kernelKeyloggers.size(), keyloggers.size()));
                         while(nr > 0){
-                            line = id + separator;
+                            line = id + CSVWriter.separator;
                             if(rootkits.size() > 0){
-                                line += rootkits.get(0) + separator;
+                                line += rootkits.get(0) + CSVWriter.separator;
                                 rootkits.remove(0);
                             } else {
-                                line += "null" + separator;
+                                line += "null" + CSVWriter.separator;
                             }
 
                             if(keyloggers.size() > 0){
-                                line += keyloggers.get(0) + separator;
+                                line += keyloggers.get(0) + CSVWriter.separator;
                                 keyloggers.remove(0);
                             } else {
-                                line += "null" + separator;
+                                line += "null" + CSVWriter.separator;
                             }
 
                             if(kernelKeyloggers.size() > 0){
-                                line += kernelKeyloggers.get(0) + separator;
+                                line += kernelKeyloggers.get(0) + CSVWriter.separator;
                                 kernelKeyloggers.remove(0);
                             } else {
-                                line += "null" + separator;
+                                line += "null" + CSVWriter.separator;
                             }
 
                             if(ransomewares.size() > 0){
@@ -550,12 +568,12 @@ public class ComputerService implements ComputerInterface, CSVReaderWriter<Compu
                         }
                         int nr = Integer.max(employees.size(), customers.size());
                         while(nr > 0){
-                            line = id + separator;
+                            line = id + CSVWriter.separator;
                             if(employees.size() > 0){
-                                line += employees.get(0) + separator;
+                                line += employees.get(0) + CSVWriter.separator;
                                 employees.remove(0);
                             } else {
-                                line += "null" + separator;
+                                line += "null" + CSVWriter.separator;
                             }
 
                             if(customers.size() > 0){

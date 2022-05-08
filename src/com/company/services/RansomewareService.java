@@ -1,7 +1,5 @@
 package com.company.services;
 
-import com.company.entities.Address;
-import com.company.entities.Employee;
 import com.company.entities.Ransomeware;
 
 import java.io.*;
@@ -9,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class RansomewareService implements RansomewareInterface, CSVReaderWriter<Ransomeware>{
+public class RansomewareService implements RansomewareInterface, CSVReader<Ransomeware>, CSVWriter<Ransomeware>{
     private List<Ransomeware> ransomewares = new ArrayList<>();
     private static RansomewareService instance;
 
@@ -109,28 +107,33 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
         ransomeware.setName(scanner.nextLine());
 
         System.out.println("Creation Date");
-        String date;
-        try {
-            date = scanner.nextLine();
-        } catch (Exception e){
-            System.out.println("Provide date in format - dd/mm/yyyy");
-            date = scanner.nextLine();
+        Date date1;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                date1 = new SimpleDateFormat("dd/MM/yyyy").parse(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Provide date in format - dd/mm/yyyy");
+            }
         }
-        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
         ransomeware.setCreationDate(date1);
 
         System.out.println("Infection Method");
         ransomeware.setInfectionMethod(scanner.nextLine());
 
         System.out.println("Number of modified registers");
-        int nr;
-        try {
-            nr = scanner.nextInt();
-        } catch (Exception e){
-            System.out.println("Enter a number");
-            nr = scanner.nextInt();
+        int nr ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                nr = Integer.parseInt(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a number");
+            }
         }
-        scanner.nextLine();
+        //scanner.nextLine();
         System.out.println("Modified registers");
         List<String> arr = new ArrayList<>();
         for(int i = 0; i < nr; ++i){
@@ -140,21 +143,29 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
         ransomeware.setModifiedRegisters(arr);
 
         System.out.println("Encryption Rating");
-        try {
-            ransomeware.setEncryptionRating(scanner.nextDouble());
-        } catch (Exception e){
-            System.out.println("Enter a double");
-            ransomeware.setEncryptionRating(scanner.nextDouble());
+        double rating ;
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                rating = Double.parseDouble(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a double");
+            }
         }
-
+        ransomeware.setEncryptionRating(rating);
 
         System.out.println("Hiding Rating");
-        try {
-            ransomeware.setHidingRating(scanner.nextDouble());
-        } catch (Exception e){
-            System.out.println("Enter a double");
-            ransomeware.setHidingRating(scanner.nextDouble());
+        while(true){
+            String line = scanner.nextLine();
+            try {
+                rating = Double.parseDouble(line);
+                break;
+            } catch (Exception e){
+                System.out.println("Enter a double");
+            }
         }
+        ransomeware.setHidingRating(rating);
 
         findRating(ransomeware);
 
@@ -170,7 +181,9 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
     public String convertObjectToString(Ransomeware object) {
         Date date = object.getCreationDate();
         String dateString = new SimpleDateFormat("dd/MM/yyyy").format(date);
-        String line = object.getId() + separator + object.getName() + separator + dateString + separator + object.getInfectionMethod() + separator + object.getEncryptionRating() + separator + object.getHidingRating()+  "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + dateString
+                + CSVWriter.separator + object.getInfectionMethod() + CSVWriter.separator + object.getEncryptionRating()
+                + CSVWriter.separator + object.getHidingRating()+  "\n";
         return line;
     }
 
@@ -206,7 +219,7 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
                         if (line == null) {
                             break;
                         }
-                        String[] fields = line.split(separator);
+                        String[] fields = line.split(CSVWriter.separator);
                         int id = Integer.parseInt(fields[0]);
                         Ransomeware ransomeware = resultLines.stream()
                                 .filter(r -> r.getId() == id)
@@ -271,7 +284,7 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
 
     @Override
     public Ransomeware processLine(String line) throws ParseException {
-        String[] fields = line.split(separator);
+        String[] fields = line.split(CSVWriter.separator);
         int id = 0;
         try{
             id = Integer.parseInt(fields[0]);
@@ -353,7 +366,7 @@ public class RansomewareService implements RansomewareInterface, CSVReaderWriter
                 for(Ransomeware object : objects){
                     for(String reg : object.getModifiedRegisters()) {
                         try{
-                            String CSVline = object.getId() + separator + reg + "\n";
+                            String CSVline = object.getId() + CSVWriter.separator + reg + "\n";
                             bufferedWriter.write(CSVline);
                         } catch (Throwable anything){
                             throw anything;

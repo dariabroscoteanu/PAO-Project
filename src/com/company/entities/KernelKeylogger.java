@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +11,14 @@ import java.util.Objects;
 public class KernelKeylogger extends Keylogger {
     private boolean isHidingRecords;
     private boolean isHidingFiles;
+
+    public KernelKeylogger(){}
+
+    public KernelKeylogger(int id, double rating, Date creationDate, String name, String infectionMethod, ArrayList<String> modifiedRegisters, List<String> usedFunctions, List<String> usedKeys, boolean isHidingRecords, boolean isHidingFiles) {
+        super(id, rating, creationDate, name, infectionMethod, modifiedRegisters, usedFunctions, usedKeys);
+        this.isHidingRecords = isHidingRecords;
+        this.isHidingFiles = isHidingFiles;
+    }
 
     public boolean isHidingRecords() {
         return isHidingRecords;
@@ -26,14 +34,6 @@ public class KernelKeylogger extends Keylogger {
 
     public void setHidingFiles(boolean hidingFiles) {
         isHidingFiles = hidingFiles;
-    }
-
-    public KernelKeylogger(){}
-
-    public KernelKeylogger(int id, double rating, Date creationDate, String name, String infectionMethod, ArrayList<String> modifiedRegisters, List<String> usedFunctions, List<String> usedKeys, boolean isHidingRecords, boolean isHidingFiles) {
-        super(id, rating, creationDate, name, infectionMethod, modifiedRegisters, usedFunctions, usedKeys);
-        this.isHidingRecords = isHidingRecords;
-        this.isHidingFiles = isHidingFiles;
     }
 
     @Override

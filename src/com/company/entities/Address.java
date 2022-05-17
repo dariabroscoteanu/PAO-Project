@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 public class Address {
     private int id;
@@ -6,6 +6,16 @@ public class Address {
     private String city;
     private String country;
     private String addressLine;
+
+    public Address() {}
+
+    public Address(int id, String street, String city, String country, String addressLine) {
+        this.id = id;
+        this.street = street;
+        this.city = city;
+        this.country = country;
+        this.addressLine = addressLine;
+    }
 
     public int getId() {
         return id;
@@ -47,17 +57,8 @@ public class Address {
         this.addressLine = addressLine;
     }
 
-    public Address() {}
-
-    public Address(String street, String city, String country, String addressLine) {
-        this.street = street;
-        this.city = city;
-        this.country = country;
-        this.addressLine = addressLine;
-    }
-
     @Override
     public String toString(){
-        return "Address{country='" + this.country + "', city='" + this.city + "', street='" + this.street + "', addressLine='" + this.addressLine + "}";
+        return "Address{id=" + this.id + ", country=" + this.country + ", city=" + this.city + ", street=" + this.street + ", addressLine=" + this.addressLine + "}";
     }
 }

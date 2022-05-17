@@ -1,16 +1,17 @@
-package entities;
+package com.company.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Computer {
     private int id;
-    private ArrayList malwares;
-    private ArrayList users;
+    private List<Malware> malwares;
+    private List<User> users;
     private double totalRating;
 
     public Computer(){}
 
-    public Computer(int id, ArrayList malwares, ArrayList users, double totalRating) {
+    public Computer(int id, List<Malware> malwares, List<User> users, double totalRating) {
         this.malwares = malwares;
         this.users = users;
         this.totalRating = totalRating;
@@ -24,7 +25,7 @@ public class Computer {
         this.id = id;
     }
 
-    public ArrayList getMalwares() {
+    public List<Malware> getMalwares() {
         return malwares;
     }
 
@@ -32,7 +33,7 @@ public class Computer {
         this.malwares = malwares;
     }
 
-    public ArrayList getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
@@ -46,6 +47,23 @@ public class Computer {
 
     public void setTotalRating(double totalRating) {
         this.totalRating = totalRating;
+    }
+
+    @Override
+    public String toString(){
+        String result = "Computer id: " + id + "\n";
+        if(malwares != null) {
+            for (Malware malware : malwares) {
+                result += malware.toString();
+            }
+        }
+        if(users != null) {
+            for (User user : users) {
+                result += user.toString();
+            }
+        }
+        result += "\n---------------------------------------------------------------------------------------------------------------------------\n";
+        return result;
     }
 
 }

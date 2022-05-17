@@ -1,4 +1,4 @@
-package entities;
+package com.company.entities;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +11,14 @@ import java.util.Objects;
 public class Keylogger extends Malware {
     protected List<String> usedFunctions;
     protected List<String> usedKeys;
+
+    public Keylogger(){}
+
+    public Keylogger(int id, double rating, Date creationDate, String name, String infectionMethod, ArrayList<String> modifiedRegisters, List<String> usedFunctions, List<String> usedKeys) {
+        super(id, rating, creationDate, name, infectionMethod, modifiedRegisters);
+        this.usedFunctions = usedFunctions;
+        this.usedKeys = usedKeys;
+    }
 
     public List<String> getUsedFunctions() {
         return usedFunctions;
@@ -25,14 +33,6 @@ public class Keylogger extends Malware {
     }
 
     public void setUsedKeys(List<String> usedKeys) {
-        this.usedKeys = usedKeys;
-    }
-
-    public Keylogger(){}
-
-    public Keylogger(int id, double rating, Date creationDate, String name, String infectionMethod, ArrayList<String> modifiedRegisters, List<String> usedFunctions, List<String> usedKeys) {
-        super(id, rating, creationDate, name, infectionMethod, modifiedRegisters);
-        this.usedFunctions = usedFunctions;
         this.usedKeys = usedKeys;
     }
 

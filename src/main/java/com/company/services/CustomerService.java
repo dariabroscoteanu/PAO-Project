@@ -111,6 +111,7 @@ public class CustomerService implements CustomerInterface, CSVReader<Customer>, 
                 System.out.println("Enter a double");
             }
         }
+        customer.setTaxes(taxes);
         return customer;
     }
 
@@ -126,7 +127,7 @@ public class CustomerService implements CustomerInterface, CSVReader<Customer>, 
 
     @Override
     public String getFileName() {
-        String path = "src/com/company/resources/CSV PAO Daria - Customer.csv";
+        String path = "src/main/resources/CSV PAO Daria - Customer.csv";
         return path;
     }
 

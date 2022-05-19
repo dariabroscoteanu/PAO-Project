@@ -73,13 +73,6 @@ public class EmployeeService implements EmployeeInterface, CSVReader<Employee>, 
         Scanner scanner = new Scanner(System.in);
         AddressService addressService = AddressService.getInstance();
         Employee employee = new Employee();
-//        System.out.println("Id");
-//        try {
-//            employee.setId(scanner.nextInt());
-//        } catch (Exception e){
-//            System.out.println("Provide int");
-//            employee.setId(scanner.nextInt());
-//        }
 
         int id = getMaxId() + 1;
         employee.setId(id);
@@ -109,7 +102,7 @@ public class EmployeeService implements EmployeeInterface, CSVReader<Employee>, 
                 System.out.println("Enter a double");
             }
         }
-
+        employee.setSalary(taxes);
         return employee;
     }
 
@@ -125,7 +118,7 @@ public class EmployeeService implements EmployeeInterface, CSVReader<Employee>, 
 
     @Override
     public String getFileName() {
-        String path = "src/com/company/resources/CSV PAO Daria - Employee.csv";
+        String path = "src/main/resources/CSV PAO Daria - Employee.csv";
         return path;
     }
 

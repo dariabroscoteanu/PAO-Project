@@ -1,13 +1,11 @@
 package com.company.services;
 
-import com.company.entities.Company;
-import com.company.entities.Computer;
-import com.company.entities.KernelKeylogger;
-import com.company.entities.Keylogger;
-import com.company.entities.Ransomeware;
-import com.company.entities.Rootkit;
-import com.company.entities.Customer;
-import com.company.entities.Employee;
+import com.company.config.DatabaseConfiguration;
+import com.company.entities.*;
+import com.company.repository.AddressRepository;
+import com.company.repository.CustomerRepository;
+import com.company.repository.EmployeeRepository;
+import com.company.repository.RansomewareRepository;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -33,6 +31,12 @@ public class Service {
 
     private AuditService auditService = AuditService.getInstance();
 
+    // for 3rd stage
+    private AddressRepository addressRepository = AddressRepository.getInstance();
+    private EmployeeRepository employeeRepository = EmployeeRepository.getInstance();
+    private CustomerRepository customerRepository = CustomerRepository.getInstance();
+    private RansomewareRepository ransomewareRepository = RansomewareRepository.getInstance();
+
     private static Service instance;
 
     private Scanner scanner = new Scanner(System.in);
@@ -44,6 +48,643 @@ public class Service {
             instance = new Service();
         }
         return instance;
+    }
+
+    public void createTabels(){
+        addressRepository.createTable();
+        employeeRepository.createTable();
+        customerRepository.createTable();
+        ransomewareRepository.createTable();
+    }
+
+    public void databaseAddressMenu(){
+        while(true) {
+            System.out.println("0 - Insert Address into Database");
+            System.out.println("1 - Get Address by Id from Database");
+            System.out.println("2 - Get Address by Street from Database");
+            System.out.println("3 - Update Address's Street in Database");
+            System.out.println("4 - Delete Address from Database");
+            System.out.println("5 - Display Addresses from Database");
+            System.out.println("6 - Exit");
+            int option;
+            while (true) {
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if (option >= 0 && option <= 6) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 6");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Enter a number between 0 and 6");
+                }
+            }
+            if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Insert Address into Database", timeStamp);
+
+                Address address = addressService.readAddress();
+                addressRepository.insertAddress(address);
+            } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Address by Id from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Address address = addressRepository.getAddressById(index);
+                if (address != null) {
+                    System.out.println(address.toString());
+                } else {
+                    System.out.println("Address doesn't exist");
+                }
+            } else if(option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Address by Street from Database", timeStamp);
+
+                System.out.println("street = ");
+                String street = scanner.nextLine();
+                Address address = addressRepository.getAddressByStreet(street);
+                if (address != null) {
+                    System.out.println(address.toString());
+                } else {
+                    System.out.println("Address doesn't exist");
+                }
+            } else if(option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Address's Street in Database", timeStamp);
+
+                System.out.println("street = ");
+                String street = scanner.nextLine();
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                addressRepository.updateAddressStreet(street, index);
+                Address address = addressRepository.getAddressById(index);
+                if(address != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Address doen't exist");
+                }
+            } else if(option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Address from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Address address = addressRepository.getAddressById(index);
+                addressRepository.deleteAddress(index);
+
+                if(address != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Address doen't exist");
+                }
+            } else if(option == 5) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Display Addresses from Database", timeStamp);
+
+                addressRepository.displayAddresses();
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void databaseEmployeeMenu(){
+        while(true) {
+            System.out.println("0 - Insert Employee into Database");
+            System.out.println("1 - Get Employee by Id from Database");
+            System.out.println("2 - Get Employee by Name from Database");
+            System.out.println("3 - Update Employee's Name in Database");
+            System.out.println("4 - Delete Employee from Database");
+            System.out.println("5 - Display Employees from Database");
+            System.out.println("6 - Exit");
+            int option;
+            while (true) {
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if (option >= 0 && option <= 6) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 6");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Enter a number between 0 and 6");
+                }
+            }
+            if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Insert Employee into Database", timeStamp);
+
+                Employee employee = new Employee();
+
+                int id = 0;
+
+                System.out.println("Name");
+                employee.setName(scanner.nextLine());
+
+                System.out.println("Email");
+                employee.setEmail(scanner.nextLine());
+
+                System.out.println("Address - choose address id");
+                addressRepository.displayIdAddresses();
+                int addressId;
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        addressId = Integer.parseInt(line);
+                        Address address = addressRepository.getAddressById(addressId);
+                        if(address != null){
+                            break;
+                        } else {
+                            System.out.println("Enter a valid id");
+                        }
+                    } catch (Exception e){
+                        System.out.println("Enter an int");
+                    }
+                }
+                Address address = addressRepository.getAddressById(addressId);
+                employee.setAddress(address);
+
+                System.out.println("Position");
+                employee.setPosition(scanner.nextLine());
+
+                System.out.println("Salary");
+                double taxes;
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        taxes = Double.parseDouble(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a double");
+                    }
+                }
+                employeeRepository.insertEmployee(employee);
+            } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Employee by Id from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Employee employee = employeeRepository.getEmployeeById(index);
+                if (employee != null) {
+                    System.out.println(employee.toString());
+                } else {
+                    System.out.println("Employee doesn't exist");
+                }
+            } else if(option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Employee by Name from Database", timeStamp);
+
+                System.out.println("name = ");
+                String name = scanner.nextLine();
+                Employee employee = employeeRepository.getEmployeeByName(name);
+                if (employee != null) {
+                    System.out.println(employee.toString());
+                } else {
+                    System.out.println("Employee doesn't exist");
+                }
+            } else if(option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Employee's Name in Database", timeStamp);
+
+                System.out.println("name = ");
+                String name = scanner.nextLine();
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+
+                employeeRepository.updateEmployeeName(name, index);
+                Employee employee = employeeRepository.getEmployeeById(index);
+                if(employee != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Employee doen't exist");
+                }
+            } else if(option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Employee from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Employee employee = employeeRepository.getEmployeeById(index);
+                employeeRepository.deleteEmployee(index);
+                if(employee != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Employee doen't exist");
+                }
+            } else if(option == 5) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Display Employees from Database", timeStamp);
+
+                employeeRepository.displayEmployee();
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void databaseCustomerMenu(){
+        while(true) {
+            System.out.println("0 - Insert Customer into Database");
+            System.out.println("1 - Get Customers by Id from Database");
+            System.out.println("2 - Get Customer by Name from Database");
+            System.out.println("3 - Update Customer's Name in Database");
+            System.out.println("4 - Delete Customer from Database");
+            System.out.println("5 - Display Customers from Database");
+            System.out.println("6 - Exit");
+            int option;
+            while (true) {
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if (option >= 0 && option <= 6) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 6");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Enter a number between 0 and 6");
+                }
+            }
+            if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Insert Customer into Database", timeStamp);
+
+                Customer customer = new Customer();
+
+                System.out.println("Name");
+                customer.setName(scanner.nextLine());
+
+                System.out.println("Email");
+                customer.setEmail(scanner.nextLine());
+
+                System.out.println("Usage");
+                customer.setUsage(scanner.nextLine());
+
+                System.out.println("Taxes");
+                double taxes;
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        taxes = Double.parseDouble(line);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("Enter a double");
+                    }
+                }
+
+                System.out.println("Address - choose address id");
+                addressRepository.displayIdAddresses();
+                int addressId;
+                while(true){
+                    String line = scanner.nextLine();
+                    try {
+                        addressId = Integer.parseInt(line);
+                        Address address = addressRepository.getAddressById(addressId);
+                        if(address != null){
+                            break;
+                        } else {
+                            System.out.println("Enter a valid id");
+                        }
+
+                    } catch (Exception e){
+                        System.out.println("Enter an int");
+                    }
+                }
+                Address address = addressRepository.getAddressById(addressId);
+                customer.setAddress(address);
+                customerRepository.insertCustomer(customer);
+            } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Customer by Id from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Customer customer = customerRepository.getCustomerById(index);
+                if (customer != null) {
+                    System.out.println(customer.toString());
+                } else {
+                    System.out.println("Customer doesn't exist");
+                }
+            } else if(option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Customer by Name from Database", timeStamp);
+
+                System.out.println("name = ");
+                String name = scanner.nextLine();
+                Customer customer = customerRepository.getCustomerByName(name);
+                if (customer != null) {
+                    System.out.println(customer.toString());
+                } else {
+                    System.out.println("Customer doesn't exist");
+                }
+            } else if(option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Customer's Name in Database", timeStamp);
+
+                System.out.println("name = ");
+                String name = scanner.nextLine();
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Customer customer = customerRepository.getCustomerById(index);
+                customerRepository.updateCustomerName(name, index);
+                if(customer != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Customer doen't exist");
+                }
+            } else if(option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Customer from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Customer customer = customerRepository.getCustomerById(index);
+                customerRepository.deleteCustomer(index);
+                if(customer != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Customer doen't exist");
+                }
+            } else if(option == 5) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Display Customers from Database", timeStamp);
+
+                customerRepository.displayCustomers();
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void databaseRansomewareMenu() throws ParseException {
+        while(true) {
+            System.out.println("0 - Insert Ransomeware into Database");
+            System.out.println("1 - Get Ransomeware by Id from Database");
+            System.out.println("2 - Get Ransomeware by Name from Database");
+            System.out.println("3 - Update Ransomeware's Name in Database");
+            System.out.println("4 - Delete Ransomeware from Database");
+            System.out.println("5 - Display Ransomewares from Database");
+            System.out.println("6 - Exit");
+            int option;
+            while (true) {
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if (option >= 0 && option <= 7) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 7");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Enter a number between 0 and 7");
+                }
+            }
+            if (option == 0) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Insert Ransomeware into Database", timeStamp);
+
+                Ransomeware ransomeware = ransomewareService.readRansomeware();
+                ransomewareRepository.insertRansomeware(ransomeware);
+            } else if (option == 1) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Ransomeware by Id from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Ransomeware ransomeware = ransomewareRepository.getRansomewareById(index);
+                if (ransomeware != null) {
+                    System.out.println(ransomeware.toString());
+                } else {
+                    System.out.println("Ransomeware doesn't exist");
+                }
+            } else if(option == 2) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Get Ransomeware by Name from Database", timeStamp);
+
+                System.out.println("name = ");
+                String name = scanner.nextLine();
+                Ransomeware ransomeware = ransomewareRepository.getRansomewareByName(name);
+                if (ransomeware != null) {
+                    System.out.println(ransomeware.toString());
+                } else {
+                    System.out.println("Ransomeware doesn't exist");
+                }
+            } else if(option == 3) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Update Ransomeware's Name in Database", timeStamp);
+
+                System.out.println("name = ");
+                String name = scanner.nextLine();
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+
+                ransomewareRepository.updateRansomewareName(name, index);
+                Ransomeware ransomeware = ransomewareRepository.getRansomewareById(index);
+                if(ransomeware != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Ransomeware doen't exist");
+                }
+            } else if(option == 4) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Delete Ransomeware from Database", timeStamp);
+
+                System.out.println("id = ");
+                int index;
+                while (true) {
+                    String line = scanner.nextLine();
+                    try {
+                        index = Integer.parseInt(line);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a number");
+                    }
+                }
+                Ransomeware ransomeware = ransomewareRepository.getRansomewareById(index);
+                ransomewareRepository.deleteRansomeware(index);
+
+                if(ransomeware != null){
+                    System.out.println("Done");
+                } else {
+                    System.out.println("Ransomeware doen't exist");
+                }
+            } else if(option == 5) {
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String timeStamp = date.format(new Date());
+                auditService.audit("Display Ransomewares from Database", timeStamp);
+
+                ransomewareRepository.displayRansomeware();
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void databaseMenu() throws ParseException {
+        createTabels();
+        while(true) {
+            System.out.println("0 - Address");
+            System.out.println("1 - Employee");
+            System.out.println("2 - Customer");
+            System.out.println("3 - Ransomeware");
+            System.out.println("4 - Exit");
+            int option;
+            while (true) {
+                String line = scanner.nextLine();
+                try {
+                    option = Integer.parseInt(line);
+                    if (option >= 0 && option <= 4) {
+                        break;
+                    } else {
+                        System.out.println("Enter a number between 0 and 4");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Enter a number between 0 and 4");
+                }
+            }
+            if(option== 0) {
+                databaseAddressMenu();
+            } else if(option == 1) {
+                databaseEmployeeMenu();
+            } else if(option == 2) {
+                databaseCustomerMenu();
+            } else if (option == 3) {
+                databaseRansomewareMenu();
+            } else {
+                break;
+            }
+        }
+        DatabaseConfiguration.closeDatabaseConnection();
     }
 
     public void writeResults(){

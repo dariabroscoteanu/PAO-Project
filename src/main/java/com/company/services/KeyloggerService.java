@@ -1,124 +1,117 @@
 package com.company.services;
 
-import com.company.entities.KernelKeylogger;
+import com.company.entities.Keylogger;
 
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVReader<KernelKeylogger>, CSVWriter<KernelKeylogger> {
-    private List<KernelKeylogger> kernelKeyloggers = new ArrayList<>();
-    private static KernelKeyloggerService instance;
+public class KeyloggerService implements KeyloggerInterface, CSVReader<Keylogger>, CSVWriter<Keylogger> {
+    private List<Keylogger> keyloggers = new ArrayList<>();
+    private static KeyloggerService instance;
 
-    private KernelKeyloggerService(){
+    private KeyloggerService(){
         read();
     }
 
-    public static KernelKeyloggerService getInstance(){
+    public static KeyloggerService getInstance(){
         if(instance == null){
-            instance = new KernelKeyloggerService();
+            instance = new KeyloggerService();
         }
         return instance;
     }
 
-    public List<KernelKeylogger> getKernelKeyloggers() {
-        List<KernelKeylogger> kernelKeyloggersCopy = new ArrayList<>();
-        kernelKeyloggersCopy.addAll(this.kernelKeyloggers);
-        return kernelKeyloggersCopy;
+    public List<Keylogger> getKeyloggers() {
+        List<Keylogger> keyloggersCopy = new ArrayList<>();
+        keyloggersCopy.addAll(this.keyloggers);
+        return keyloggersCopy;
     }
 
-    public KernelKeylogger getKernelKeyloggerById(int index){
-        KernelKeylogger kernelKeylogger = new KernelKeylogger();
-        for(int i = 0; i < this.kernelKeyloggers.size(); ++i){
-            if(this.kernelKeyloggers.get(i).getId() == index){
-                kernelKeylogger = this.kernelKeyloggers.get(i);
+    public Keylogger getKeyloggerById(int index){
+        Keylogger keylogger = new Keylogger();
+        for(int i = 0; i < this.keyloggers.size(); ++i){
+            if(this.keyloggers.get(i).getId() == index){
+                keylogger = this.keyloggers.get(i);
             }
         }
-        return kernelKeylogger;
+        return keylogger;
     }
 
-    public void updateKernelKeylogger(int index, KernelKeylogger kernelKeylogger){
-        for(int i = 0; i < this.kernelKeyloggers.size(); ++i){
-            if(this.kernelKeyloggers.get(i).getId() == index){
-                this.kernelKeyloggers.remove(i);
-                this.kernelKeyloggers.add(i, kernelKeylogger);
+    public void updateKeylogger(int index, Keylogger keylogger){
+        for(int i = 0; i < this.keyloggers.size(); ++i){
+            if(this.keyloggers.get(i).getId() == index){
+                this.keyloggers.remove(i);
+                this.keyloggers.add(i, keylogger);
                 break;
             }
         }
     }
 
-    public void addKernelKeylogger(KernelKeylogger kernelKeylogger){
-        this.kernelKeyloggers.add(kernelKeylogger);
+    public void addKeylogger(Keylogger keylogger){
+        this.keyloggers.add(keylogger);
     }
 
-    public void deleteKernelKeyloggerById(int index){
-        for(int i = 0; i < this.kernelKeyloggers.size(); ++i){
-            if(this.kernelKeyloggers.get(i).getId() == index){
-                this.kernelKeyloggers.remove(i);
+    public void deleteKeyloggerById(int index){
+        for(int i = 0; i < this.keyloggers.size(); ++i){
+            if(this.keyloggers.get(i).getId() == index){
+                this.keyloggers.remove(i);
                 break;
             }
         }
     }
 
-    public void deteleKernelKeylogger(KernelKeylogger kernelKeylogger){
-        for(int i = 0;i < this.kernelKeyloggers.size(); ++i){
-            if(this.kernelKeyloggers.get(i).equals(kernelKeylogger)){
-                this.kernelKeyloggers.remove(i);
+    public void deteleKeylogger(Keylogger keylogger){
+        for(int i = 0;i < this.keyloggers.size(); ++i){
+            if(this.keyloggers.get(i).equals(keylogger)){
+                this.keyloggers.remove(i);
                 break;
             }
         }
     }
 
-    public double findRating(KernelKeylogger kernelKeylogger){
+    public double findRating(Keylogger keylogger){
         double rating = 0;
-        if((kernelKeylogger.getModifiedRegisters().size() > 0) ){
-            for (String element : kernelKeylogger.getModifiedRegisters()) {
+        if((keylogger.getModifiedRegisters().size() > 0) ){
+            for (String element : keylogger.getModifiedRegisters()) {
                 if (element.equals("HKLM-run") || element.equals("HKCU-run"))
                     rating += 20;
             }
         }
-        if(kernelKeylogger.getUsedFunctions().size() > 0) {
-            for (String element : kernelKeylogger.getUsedFunctions()) {
-                if (element.equals("CreateFileW") || element.equals("OpenProcess") || element.equals("ReadFile") || element.equals("WriteFile") || element.equals("RegisterHotKey") || element.equals("SetWindowsHookEx"))
+        if(keylogger.getUsedFunctions().size() > 0) {
+            for (String element : keylogger.getUsedFunctions()) {
+                if (element.equals("CreateFileW") || element.equals("OpenProcess") || element.equals("OpenProcess") || element.equals("WriteFile") || element.equals("RegisterHotKey") || element.equals("SetWindowsHookEx"))
                     rating += 30;
             }
         }
-        if(kernelKeylogger.getUsedKeys().size() > 0){
-            for (String element : kernelKeylogger.getUsedKeys()) {
+        if(keylogger.getUsedKeys().size() > 0){
+            for (String element : keylogger.getUsedKeys()) {
                 if (element.equals("[Up]") || element.equals("[Num Lock]") || element.equals("[Down]") || element.equals("[Right]") || element.equals("[UP]") || element.equals("[Left]") || element.equals("[PageDown]"))
                     rating += 10;
             }
         }
-        if(kernelKeylogger.isHidingRecords()){
-            rating += 30;
-        }
-        if(kernelKeylogger.isHidingFiles()){
-            rating += 20;
-        }
-        kernelKeylogger.setRating(rating);
+        keylogger.setRating(rating);
         return rating;
     }
 
-    public KernelKeylogger readKernelkeylogger() throws ParseException {
+    public Keylogger readKeylogger() throws ParseException {
         Scanner scanner = new Scanner(System.in);
-        KernelKeylogger kernelKeylogger = new KernelKeylogger();
+        Keylogger keylogger = new Keylogger();
 //        System.out.println("Id");
 //        try {
-//            kernelKeylogger.setId(scanner.nextInt());
+//            keylogger.setId(scanner.nextInt());
 //        } catch (Exception e){
 //            System.out.println("Provide int");
-//            kernelKeylogger.setId(scanner.nextInt());
+//            keylogger.setId(scanner.nextInt());
 //        }
 
         int id = getMaxId() + 1;
-        kernelKeylogger.setId(id);
+        keylogger.setId(id);
 
         System.out.println("Name");
-        kernelKeylogger.setName(scanner.nextLine());
+        keylogger.setName(scanner.nextLine());
 
         System.out.println("Creation Date - dd/mm/yyyy");
-        //String date;
         Date date1;
         while(true){
             String line = scanner.nextLine();
@@ -129,17 +122,10 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                 System.out.println("Provide date in format - dd/mm/yyyy");
             }
         }
-//        try {
-//            date = scanner.nextLine();
-//        } catch (Exception e){
-//            System.out.println("Provide date in format - dd/mm/yyyy");
-//            date = scanner.nextLine();
-//        }
-//        Date;
-        kernelKeylogger.setCreationDate(date1);
+        keylogger.setCreationDate(date1);
 
         System.out.println("Infection Method");
-        kernelKeylogger.setInfectionMethod(scanner.nextLine());
+        keylogger.setInfectionMethod(scanner.nextLine());
 
         System.out.println("Number of modified registers");
         int nr ;
@@ -159,10 +145,10 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             String str = scanner.nextLine();
             arr.add(str);
         }
-        kernelKeylogger.setModifiedRegisters(arr);
+        keylogger.setModifiedRegisters(arr);
 
         System.out.println("Number of used functions");
-//        int nr ;
+        //int nr ;
         while(true){
             String line = scanner.nextLine();
             try {
@@ -179,10 +165,10 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             String str = scanner.nextLine();
             arr1.add(str);
         }
-        kernelKeylogger.setUsedFunctions(arr1);
+        keylogger.setUsedFunctions(arr1);
 
         System.out.println("Number of used keys");
-//        int nr ;
+        //int nr ;
         while(true){
             String line = scanner.nextLine();
             try {
@@ -199,41 +185,10 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             String str = scanner.nextLine();
             arr2.add(str);
         }
-        kernelKeylogger.setUsedKeys(arr2);
-        System.out.println("Is hiding files?");
-        boolean  ok;
-        while(true){
-            String line = scanner.nextLine();
-            try {
-                ok = Boolean.parseBoolean(line);
-                break;
-            } catch (Exception e){
-                System.out.println("Enter a number");
-            }
-        }
-        kernelKeylogger.setHidingFiles(ok);
-        System.out.println("Is hiding records?");
-        while(true){
-            String line = scanner.nextLine();
-            try {
-                ok = Boolean.parseBoolean(line);
-                break;
-            } catch (Exception e){
-                System.out.println("Enter a number");
-            }
-        }kernelKeylogger.setHidingRecords(ok);
-
-//        try {
-//            kernelKeylogger.setHidingRecords(scanner.nextBoolean());
-//        } catch (Exception e){
-//            System.out.println("Enter a boolean");
-//            kernelKeylogger.setHidingRecords(scanner.nextBoolean());
-//        }
-
-        findRating(kernelKeylogger);
-        return kernelKeylogger;
+        keylogger.setUsedKeys(arr2);
+        findRating(keylogger);
+        return keylogger;
     }
-
 
     @Override
     public String getAntet() {
@@ -241,8 +196,9 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
     }
 
     @Override
-    public KernelKeylogger processLine(String line) throws ParseException {
+    public Keylogger processLine(String line) throws ParseException {
         String[] fields = line.split(CSVWriter.separator);
+        //System.out.println(line);
         int id = 0;
         try{
             id = Integer.parseInt(fields[0]);
@@ -253,60 +209,41 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         Date date = new SimpleDateFormat("dd/MM/yyyy").parse(fields[2]);
         String infection = fields[3];
 
-        String records = fields[4];
-        boolean ok1 = false;
-        if(Objects.equals(records, "TRUE")){
-            ok1 = true;
-        }
-
-        boolean ok2 = false;
-        String files = fields[5];
-        if(Objects.equals(files, "TRUE")){
-            ok2 = true;
-        }
-        return new KernelKeylogger(id, 0.0, date, name, infection, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), ok1, ok2);
+        return new Keylogger(id, 0.0, date, name, infection, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
     }
 
     @Override
     public String getFileName() {
-        String path = "src/com/company/resources/CSV PAO Daria - KernelKeylogger.csv";
+        String path = "src/main/resources/CSV PAO Daria - Keylogger.csv";
         return path;
     }
 
     @Override
-    public String convertObjectToString(KernelKeylogger object) {
-        String ok1 = "FALSE", ok2 = "FALSE";
-        if(object.isHidingRecords()){
-            ok1 = "TRUE";
-        }
-        if(object.isHidingFiles()){
-            ok2 = "TRUE";
-        }
+    public String convertObjectToString(Keylogger object) {
         Date date = object.getCreationDate();
         String dateString = new SimpleDateFormat("dd/MM/yyyy").format(date);
-        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + dateString
-                + CSVWriter.separator + object.getInfectionMethod() + CSVWriter.separator + ok1 + CSVWriter.separator + ok2+  "\n";
+        String line = object.getId() + CSVWriter.separator + object.getName() + CSVWriter.separator + dateString + CSVWriter.separator + object.getInfectionMethod() + "\n";
         return line;
     }
 
     @Override
-    public void initList(List<KernelKeylogger> objects) {
-        kernelKeyloggers = new ArrayList<KernelKeylogger>(objects);
+    public void initList(List<Keylogger> objects) {
+        keyloggers = new ArrayList<Keylogger>(objects);
     }
 
-    public List<KernelKeylogger> read() {
+    public List<Keylogger> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "src/com/company/resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
+        String extraFileName = "src/main/resources/CSV PAO Daria - Keylogger_Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            List<KernelKeylogger> result;
+            List<Keylogger> result;
 
             try {
-                List<KernelKeylogger> resultLines = new ArrayList<KernelKeylogger>();
+                List<Keylogger> resultLines = new ArrayList<Keylogger>();
                 bufferedReader.readLine(); // skip first line
                 String currentLine = bufferedReader.readLine();
 
@@ -315,7 +252,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                         result = resultLines;
                         break;
                     }
-                    KernelKeylogger obj = this.processLine(currentLine);
+                    Keylogger obj = this.processLine(currentLine);
                     resultLines.add(obj);
                     currentLine = bufferedReader.readLine();
                 }
@@ -329,43 +266,43 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                         }
                         String[] fields = line.split(CSVWriter.separator);
                         int id = Integer.parseInt(fields[0]);
-                        KernelKeylogger kernelKeylogger = resultLines.stream()
+                        Keylogger keylogger = resultLines.stream()
                                 .filter(r -> r.getId() == id)
                                 .findAny()
                                 .orElse(null);
-                        if(kernelKeylogger != null){
-                            if(kernelKeylogger.getModifiedRegisters().size() == 0){
+                        if(keylogger != null){
+                            if(keylogger.getModifiedRegisters().size() == 0){
                                 List<String> reg = new ArrayList<String>();
                                 reg.add(fields[1]);
-                                kernelKeylogger.setModifiedRegisters(reg);
+                                keylogger.setModifiedRegisters(reg);
                             } else {
-                                List<String> reg = kernelKeylogger.getModifiedRegisters();
+                                List<String> reg = keylogger.getModifiedRegisters();
                                 reg.add(fields[1]);
-                                kernelKeylogger.setModifiedRegisters(reg);
+                                keylogger.setModifiedRegisters(reg);
                             }
-                            if(kernelKeylogger.getUsedFunctions().size() == 0){
+                            if(keylogger.getUsedFunctions().size() == 0){
                                 List<String> func = new ArrayList<String>();
                                 func.add(fields[2]);
-                                kernelKeylogger.setUsedFunctions(func);
+                                keylogger.setUsedFunctions(func);
                             } else {
-                                List<String> func = kernelKeylogger.getUsedFunctions();
+                                List<String> func = keylogger.getUsedFunctions();
                                 func.add(fields[2]);
-                                kernelKeylogger.setUsedFunctions(func);
+                                keylogger.setUsedFunctions(func);
                             }
-                            if(kernelKeylogger.getUsedKeys().size() == 0){
+                            if(keylogger.getUsedKeys().size() == 0){
                                 List<String> keys = new ArrayList<String>();
                                 keys.add(fields[3]);
-                                kernelKeylogger.setUsedKeys(keys);
+                                keylogger.setUsedKeys(keys);
                             } else {
-                                List<String> keys = kernelKeylogger.getUsedFunctions();
+                                List<String> keys = keylogger.getUsedFunctions();
                                 keys.add(fields[3]);
-                                kernelKeylogger.setUsedKeys(keys);
+                                keylogger.setUsedKeys(keys);
                             }
                             int index = 0;
-                            for(KernelKeylogger element : resultLines){
-                                if(element.getId() == kernelKeylogger.getId()){
-                                    findRating(kernelKeylogger);
-                                    resultLines.set(index, kernelKeylogger);
+                            for(Keylogger element : resultLines){
+                                if(element.getId() == keylogger.getId()){
+                                    findRating(keylogger);
+                                    resultLines.set(index, keylogger);
                                     break;
                                 }
                                 index += 1;
@@ -409,28 +346,28 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
 
     public int getMaxId(){
         int max = 0;
-        for(int i = 0; i < kernelKeyloggers.size(); ++i){
-            if(kernelKeyloggers.get(i).getId() > max){
-                max = kernelKeyloggers.get(i).getId();
+        for(int i = 0; i < keyloggers.size(); ++i){
+            if(keyloggers.get(i).getId() > max){
+                max = keyloggers.get(i).getId();
             }
         }
         return max;
     }
 
-    public void write(List<KernelKeylogger> objects){
+    public void write(List<Keylogger> objects){
         String fileName = this.getFileName();
         File file = new File(fileName);
 
         try{
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
             try{
-                String CSVline = "Id,Name,Creation Date,Infection Method,Is Hiding Records,Is Hiding Files\n";
+                String CSVline = "Id,Name,Creation Date,Infection Method\n";
                 bufferedWriter.write(CSVline);
             } catch (Throwable anything){
                 throw anything;
             }
             if(objects != null){
-                for(KernelKeylogger object : objects){
+                for(Keylogger object : objects){
                     try{
                         String CSVline = this.convertObjectToString(object);
                         bufferedWriter.write(CSVline);
@@ -444,7 +381,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "src/com/company/resources/CSV PAO Daria - KernelKeylogger_Extra.csv";
+        fileName = "src/main/resources/CSV PAO Daria - Keylogger_Extra.csv";
         file = new File(fileName);
 
         try{
@@ -456,7 +393,7 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
                 throw anything;
             }
             if(objects != null){
-                for(KernelKeylogger object : objects){
+                for(Keylogger object : objects){
                     List<String> reg = object.getModifiedRegisters();
                     List<String> func = object.getUsedFunctions();
                     List<String> keys = object.getUsedKeys();
@@ -500,5 +437,4 @@ public class KernelKeyloggerService implements KernelKeyloggerInterface, CSVRead
             e1.printStackTrace();
         }
     }
-
 }

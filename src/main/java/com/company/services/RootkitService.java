@@ -220,7 +220,7 @@ public class RootkitService implements RootkitInterface, CSVReader<Rootkit>, CSV
 
     @Override
     public String getFileName() {
-        String path = "src/com/company/resources/CSV PAO Daria - Rootkit.csv";
+        String path = "src/main/resources/CSV PAO Daria - Rootkit.csv";
         return path;
     }
 
@@ -240,7 +240,7 @@ public class RootkitService implements RootkitInterface, CSVReader<Rootkit>, CSV
     public List<Rootkit> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "src/com/company/resources/CSV PAO Daria - Rootkit_Extra.csv";
+        String extraFileName = "src/main/resources/CSV PAO Daria - Rootkit_Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -386,7 +386,7 @@ public class RootkitService implements RootkitInterface, CSVReader<Rootkit>, CSV
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "src/com/company/resources/CSV PAO Daria - Rootkit_Extra.csv";
+        fileName = "src/main/resources/CSV PAO Daria - Rootkit_Extra.csv";
         file = new File(fileName);
 
         try{

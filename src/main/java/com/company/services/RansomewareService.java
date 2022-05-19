@@ -85,7 +85,7 @@ public class RansomewareService implements RansomewareInterface, CSVReader<Ranso
 
     @Override
     public String getFileName() {
-        String path = "src/com/company/resources/CSV PAO Daria - Ransomeware.csv";
+        String path = "src/main/resources/CSV PAO Daria - Ransomeware.csv";
         return path;
     }
 
@@ -190,7 +190,7 @@ public class RansomewareService implements RansomewareInterface, CSVReader<Ranso
     public List<Ransomeware> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "src/com/company/resources/CSV PAO Daria - Ransomeware _Extra.csv";
+        String extraFileName = "src/main/resources/CSV PAO Daria - Ransomeware _Extra.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -351,7 +351,7 @@ public class RansomewareService implements RansomewareInterface, CSVReader<Ranso
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        String fileName1 = "src/com/company/resources/CSV PAO Daria - Ransomeware _Extra.csv";
+        String fileName1 = "src/main/resources/CSV PAO Daria - Ransomeware _Extra.csv";
         File file1 = new File(fileName1);
 
         try{

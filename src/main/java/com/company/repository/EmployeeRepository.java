@@ -38,6 +38,47 @@ public class EmployeeRepository {
         return null;
     }
 
+    private List<Employee> mapToList(ResultSet resultSet){
+        List<Employee> list = new ArrayList<>();
+        try {
+            while(true){
+                Employee employee = maptoEmployee(resultSet);
+                if (employee == null)
+                    return list;
+                else list.add(employee);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Employee> getAll() {
+        String selectSql = "SELECT * FROM employee";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return mapToList(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Employee getMaxId(){
+        String selectSql = "SELECT * FROM employee ORDER BY id DESC LIMIT 0, 1";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return maptoEmployee(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void createTable(){
         // (int id, Address address, String name, String email, String position, double salary)
         String createSql = "CREATE TABLE IF NOT EXISTS employee " +

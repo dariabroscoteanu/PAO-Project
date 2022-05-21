@@ -1,6 +1,7 @@
 package com.company.repository;
 
 import com.company.config.DatabaseConfiguration;
+import com.company.entities.Employee;
 import com.company.entities.Ransomeware;
 import com.company.services.RansomewareService;
 
@@ -60,6 +61,47 @@ public class RansomewareRepository {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    private List<Ransomeware> mapToList(ResultSet resultSet){
+        List<Ransomeware> list = new ArrayList<>();
+        try {
+            while(true){
+                Ransomeware ransomeware = maptoRansomeware(resultSet);
+                if (ransomeware == null)
+                    return list;
+                else list.add(ransomeware);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Ransomeware getMaxId(){
+        String selectSql = "SELECT * FROM ransomeware ORDER BY id DESC LIMIT 0, 1";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return maptoRansomeware(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Ransomeware> getAll() {
+        String selectSql = "SELECT * FROM ransomeware";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return mapToList(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

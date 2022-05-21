@@ -38,6 +38,47 @@ public class CustomerRepository {
         return null;
     }
 
+    private List<Customer> mapToList(ResultSet resultSet){
+        List<Customer> list = new ArrayList<>();
+        try {
+            while(true){
+                Customer customer = maptoCustomer(resultSet);
+                if (customer == null)
+                    return list;
+                else list.add(customer);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Customer getMaxId(){
+        String selectSql = "SELECT * FROM customer ORDER BY id DESC LIMIT 0, 1";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return maptoCustomer(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Customer> getAll(){
+        String selectSql = "SELECT * FROM customer";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return mapToList(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void createTable(){
         String createSql = "CREATE TABLE IF NOT EXISTS customer " +
                 "(id int PRIMARY KEY AUTO_INCREMENT, " +

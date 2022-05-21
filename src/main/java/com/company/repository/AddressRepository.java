@@ -34,6 +34,48 @@ public class AddressRepository {
         return null;
     }
 
+    private List<Address> mapToList(ResultSet resultSet){
+        List<Address> list = new ArrayList<>();
+        try {
+            while(true){
+                Address address = maptoAddress(resultSet);
+                if (address == null)
+                    return list;
+                else list.add(address);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Address> getAll(){
+        String selectSql = "SELECT * FROM address";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            return mapToList(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Address getMaxId(){
+        String selectSql = "SELECT * FROM address ORDER BY id DESC LIMIT 0, 1";
+
+        Connection connection = DatabaseConfiguration.getDatabaseConnection();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            if (resultSet.next())
+            return maptoAddress(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void createTable() {
         String createSql = "CREATE TABLE IF NOT EXISTS address " +
                 "(id int PRIMARY KEY AUTO_INCREMENT, " +

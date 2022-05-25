@@ -256,6 +256,7 @@ public class Service {
                         System.out.println("Enter a double");
                     }
                 }
+                employee.setSalary(taxes);
                 employeeRepository.insertEmployee(employee);
             } else if (option == 1) {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -404,7 +405,7 @@ public class Service {
                         System.out.println("Enter a double");
                     }
                 }
-
+                customer.setTaxes(taxes);
                 System.out.println("Address - choose address id");
                 addressRepository.displayIdAddresses();
                 int addressId;

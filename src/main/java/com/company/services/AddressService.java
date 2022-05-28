@@ -87,7 +87,7 @@ public class AddressService implements AddressInterface, CSVReader<Address>, CSV
 
     @Override
     public String getFileName() {
-        String path = "src/com/company/resources/CSV PAO Daria - Address.csv";
+        String path = "src/main/resources/CSV PAO Daria - Address.csv";
         return path;
     }
 

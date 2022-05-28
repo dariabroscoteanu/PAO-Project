@@ -130,7 +130,7 @@ public class CompanyService implements CompanyInterface, CSVReader<Company>, CSV
 
     @Override
     public String getFileName(){
-        String path = "src/com/company/resources/CSV PAO Daria - Company.csv";
+        String path = "src/main/resources/CSV PAO Daria - Company.csv";
         return path;
     }
 
@@ -200,7 +200,7 @@ public class CompanyService implements CompanyInterface, CSVReader<Company>, CSV
     public List<Company> read() {
         String fileName = this.getFileName();
         File file = new File(fileName);
-        String extraFileName = "src/com/company/resources/CSV PAO Daria - Company_Computer.csv";
+        String extraFileName = "src/main/resources/CSV PAO Daria - Company_Computer.csv";
         File extraFile = new File(extraFileName);
 
         try {
@@ -386,7 +386,7 @@ public class CompanyService implements CompanyInterface, CSVReader<Company>, CSV
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        fileName = "src/com/company/resources/CSV PAO Daria - Company_Computer.csv";
+        fileName = "src/main/resources/CSV PAO Daria - Company_Computer.csv";
         file = new File(fileName);
 
         try{

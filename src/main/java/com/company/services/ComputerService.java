@@ -268,8 +268,8 @@ public class ComputerService implements ComputerInterface, CSVReader<Computer>, 
 
 
     public List<Computer> read() {
-        String fileNameUser = "src/com/company/resources/CSV PAO Daria - Computer_User.csv";
-        String fileNameMalware = "src/com/company/resources/CSV PAO Daria - Computer_Malware.csv";
+        String fileNameUser = "src/main/resources/CSV PAO Daria - Computer_User.csv";
+        String fileNameMalware = "src/main/resources/CSV PAO Daria - Computer_Malware.csv";
         File file1 = new File(fileNameUser);
         File file2 = new File(fileNameMalware);
         try {
@@ -442,9 +442,9 @@ public class ComputerService implements ComputerInterface, CSVReader<Computer>, 
     }
 
     public void write(List<Computer> objects){
-        String fileNameMalware = "src/com/company/resources/CSV PAO Daria - Computer_Malware.csv";
+        String fileNameMalware = "src/main/resources/CSV PAO Daria - Computer_Malware.csv";
         File fileMalware = new File(fileNameMalware);
-        String fileName = "src/com/company/resources/CSV PAO Daria - Computer_User.csv";
+        String fileName = "src/main/resources/CSV PAO Daria - Computer_User.csv";
         File file = new File(fileName);
 
         try{

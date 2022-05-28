@@ -9,7 +9,7 @@ public interface AuditServiceInterface {
     String separator = ",";
 
     default void audit(String action, String timestamp) {
-        String pathCSV = "src/com/company/resources/audit.csv";
+        String pathCSV = "src/main/resources/audit.csv";
         try{
             File csvFile = new File(pathCSV);
             FileWriter writer = new FileWriter(pathCSV, true);
